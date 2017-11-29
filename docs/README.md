@@ -4,4 +4,4 @@ JavaScript function wrapper.
 
 Work in progress. Wait for it.
 
-![Ripper Roo](./Ripper%20Roo.png "Ripper Roo")
+![Ripper Roo](./ripper-roo.png "Ripper Roo")
