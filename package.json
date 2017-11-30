@@ -1,0 +1,22 @@
+{
+  "name": "wrapper-roo",
+  "version": "0.0.1",
+  "description": "JavaScript function wrapper",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucaFranceschini/wrapper-roo.git"
+  },
+  "author": "Luca Franceschini <luca.franceschini92@gmail.com> (https://github.com/LucaFranceschini)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucaFranceschini/wrapper-roo/issues"
+  },
+  "homepage": "https://github.com/LucaFranceschini/wrapper-roo#readme"
+}
