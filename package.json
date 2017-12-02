@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/LucaFranceschini/wrapper-roo/issues"
   },
-  "homepage": "https://github.com/LucaFranceschini/wrapper-roo#readme"
+  "homepage": "https://github.com/LucaFranceschini/wrapper-roo#readme",
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  }
 }
