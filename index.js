@@ -1,12 +1,22 @@
 'use strict';
 
-exports.wrapFunction = wrapFunction
-
-// nice alias when doing wrap = require('wrapper-roo')
-exports.aFunction = wrapFunction
+// default hook parameter
+function emptyHook() { }
 
 // wrap a given function in a new one always invoking pre and postHook
-function wrapFunction(func, preHook, postHook) {
+// this is a nice alias when doing wrap = require('wrapper-roo')
+exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
+  // arguments checking
+  if (typeof func !== 'function')
+    throw new TypeError('The function to be wrapped must be a Function')
+
+  if (typeof preHook !== 'function')
+    throw new TypeError('Prehook must be a Function')
+
+  if (typeof postHook !== 'function')
+    throw new TypeError('PostHook must be a Function')
+
+  // return the wrapped function
   return (...args) => {
     // try-catch needed to invoke postHook if func throws
     try {
