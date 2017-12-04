@@ -3,11 +3,14 @@
 const assert = require('assert')
     , wrap = require('../index')
 
+// some functions to be used in tests
 function gimme42() { return 42 }
+function gimmeThis() { return this }
 function emptyHook() { }
+function Box(value) { this.value = value }
 
 describe('wrap', function () {
-  describe('#wrapFunction()', function () {
+  describe('#aFunction()', function () {
     it('should have default hooks', function () {
       wrap.aFunction(gimme42)
     })
@@ -68,7 +71,7 @@ describe('wrap', function () {
       const args = [1, 2, 3]
       function toWrap(...a) { assert.deepEqual(a, args) }
       const wrapped = wrap.aFunction(toWrap)
-      wrapped.apply(null, args)
+      wrapped(...args)
     })
 
     it('should forward return value', function () {
@@ -87,6 +90,57 @@ describe('wrap', function () {
       }
     })
 
-    it('what about capturing this?')
+    // we assume strict mode, so default binding for 'this' is undefined
+    it('should preserve default this binding (undefined)', function () {
+      const wrapped = wrap.aFunction(gimmeThis)
+      assert.equal(wrapped(), undefined)
+    })
+
+    it('should preserve bind()', function () {
+      // do not bind to 'this' here, it's not printable by Mocha if equal fails
+      const obj = { }
+          , bound = gimmeThis.bind(obj)
+          , wrapped = wrap.aFunction(bound)
+      assert.equal(wrapped(), obj)
+    })
+    
+    it('should preserve constructor calls', function () {
+      const Wrapped = wrap.aFunction(Box)
+      assert.equal(new Wrapped(42).value, 42)
+    })
+
+    it('should preserve prototypes link in constructor calls', function () {
+      const Wrapped = wrap.aFunction(Box)
+          , box = new Wrapped(42)
+      assert.equal(Object.getPrototypeOf(box), Box.prototype)
+    })
+
+    it('should work if called with explicit binding', function () {
+      const wrapped = wrap.aFunction(gimmeThis)
+          , obj = { }
+      // should return undefined and not obj
+      assert.equal(gimmeThis.call(obj, wrapped), wrapped.call(obj, wrapped))
+    })
+
+    it("should allow 'new' to override bind() (partial application)", function () {
+      function Pair(a, b) {
+        this.a = a
+        this.b = b
+      }
+      
+      // don't care about 'this' here, just fix first argument
+      // 'this' will be overridden by constructor call anyway
+      const Pair42 = Pair.bind(null, 42)
+      
+      // wrap both
+      const WrappedPair = wrap.aFunction(Pair)
+          , WrappedPair42 = wrap.aFunction(Pair42)
+      
+      assert.deepEqual(new Pair(42, 'foo'), new Pair42('foo'))
+      assert.deepEqual(new WrappedPair(42, 'foo'), new WrappedPair42('foo'))
+    })
+
+    it('should produce a function as equal as possible to the original one...')
+    it('should support getters and setters...')
   })
 })
