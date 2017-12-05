@@ -31,6 +31,10 @@ describe('wrap', function () {
       assert.equal(typeof wrap.aFunction(gimme42), 'function')
     })
 
+    it('should return a different function', function () {
+      assert.notEqual(wrap.aFunction(gimme42), gimme42)
+    })
+
     it('should invoke wrapped function exactly once', function () {
       let counter = 0
       function increment() { ++counter }
