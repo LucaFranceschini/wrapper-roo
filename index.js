@@ -22,7 +22,7 @@ exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
   // return the wrapper function
   // do not use an arrow here, traditional 'this' binding needed (see below)
   // note: the 'this' inside here does not come from the enclosing arrow
-  return function wrapper(...args) {
+  return function wrapper() {
     preHook()
 
     // try-catch needed to invoke postHook if func throws
@@ -30,9 +30,9 @@ exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
       // check if this is a constructor call or not, and do the same
       // new.target undefined only in constructor call (ES5)
       const result = new.target
-        ? new func(...args)
+        ? new func(...arguments)
         // forward 'this' binding
-        : func.apply(this, args)
+        : func.apply(this, arguments)
 
       postHook()
       return result
