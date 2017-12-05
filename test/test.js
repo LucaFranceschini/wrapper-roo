@@ -187,7 +187,6 @@ describe('wrap', function () {
       assert.deepStrictEqual(originalDescriptors, wrappedDescriptors)
     })
 
-    it('should produce a function as equal as possible to the original one...')
     it('should support getters and setters...')
   })
 })
