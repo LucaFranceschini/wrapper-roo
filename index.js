@@ -11,7 +11,7 @@ function emptyHook() { }
 exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
   // arguments checking
   if (typeof func !== 'function')
-    throw new TypeError('The function to be wrapped must be a function')
+    throw new TypeError('The object to be wrapped must be a function')
 
   if (typeof preHook !== 'function')
     throw new TypeError('Prehook must be a function')
