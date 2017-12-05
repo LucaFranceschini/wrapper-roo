@@ -131,15 +131,15 @@ describe('wrap', function () {
         this.a = a
         this.b = b
       }
-      
+
       // don't care about 'this' here, just fix first argument
       // 'this' will be overridden by constructor call anyway
       const Pair42 = Pair.bind(null, 42)
-      
+
       // wrap both
       const WrappedPair = wrap.aFunction(Pair)
           , WrappedPair42 = wrap.aFunction(Pair42)
-      
+
       assert.deepEqual(new Pair(42, 'foo'), new Pair42('foo'))
       assert.deepEqual(new WrappedPair(42, 'foo'), new WrappedPair42('foo'))
     })
