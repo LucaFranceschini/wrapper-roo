@@ -27,6 +27,16 @@ describe('wrap', function () {
       assert.throws(() => wrap.aFunction(42), TypeError)
     })
 
+    it('should invoke hooks and function in the right order', function () {
+      let result = ''
+      function foo() { result += 'b' }
+      const preHook = () => result += 'a'
+          , postHook = () => result += 'c'
+          , wrapped = wrap.aFunction(foo, preHook, postHook)
+      wrapped()
+      assert.strictEqual(result, 'abc')
+    })
+
     it('should return a function', function () {
       assert.strictEqual(typeof wrap.aFunction(gimme42), 'function')
     })
