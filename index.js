@@ -6,7 +6,7 @@ function emptyHook() { }
 /*
  * Wrap a given function in a new one always invoking pre- and post-hook.
  * This is a nice alias when doing wrap = require('wrapper-roo').
- * Both arrows and functions are fine here, no 'this' used.
+ * Both arrows and functions are fine here, the arrow 'this' is not used.
  */
 exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
   // arguments checking
@@ -19,9 +19,10 @@ exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
   if (typeof postHook !== 'function')
     throw new TypeError('Posthook must be a function')
 
-  // return the wrapped function
+  // return the wrapper function
   // do not use an arrow here, traditional 'this' binding needed (see below)
-  return function (...args) {
+  // note: the 'this' inside here does not come from the enclosing arrow
+  return function wrapper(...args) {
     preHook()
 
     // try-catch needed to invoke postHook if func throws
