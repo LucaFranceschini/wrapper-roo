@@ -1,2 +1,5 @@
 # do not version npm dependencies
 node_modules
+
+# coverage report
+coverage
