@@ -178,6 +178,7 @@ describe('wrap', function () {
       assert.strictEqual(originalProto, wrappedProto)
     })
 
+    // this also checks for properties whose key is a Symbol
     it('should copy all own properties', function () {
       // wrap a function with a number of arguments > 0 to avoid default
       const wrapped = wrap.aFunction(Box)
