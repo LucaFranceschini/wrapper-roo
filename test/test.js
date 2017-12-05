@@ -177,6 +177,14 @@ describe('wrap', function () {
       assert.strictEqual(originalProto, wrappedProto)
     })
 
+    it('should copy all own properties', function () {
+      // wrap a function with a number of arguments > 0 to avoid default
+      const wrapped = wrap.aFunction(Box)
+          , originalDescriptors = Object.getOwnPropertyDescriptors(Box)
+          , wrappedDescriptors = Object.getOwnPropertyDescriptors(wrapped)
+      assert.deepStrictEqual(originalDescriptors, wrappedDescriptors)
+    })
+
     it('should produce a function as equal as possible to the original one...')
     it('should support getters and setters...')
   })
