@@ -19,10 +19,9 @@ exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
   if (typeof postHook !== 'function')
     throw new TypeError('Posthook must be a function')
 
-  // return the wrapper function
   // do not use an arrow here, traditional 'this' binding needed (see below)
   // note: the 'this' inside here does not come from the enclosing arrow
-  return function wrapper() {
+  function wrapper() {
     preHook()
 
     // try-catch needed to invoke postHook if func throws
@@ -42,4 +41,10 @@ exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
       throw err
     }
   }
+
+  // copy own properties
+  const properties = Object.getOwnPropertyDescriptors(func)
+  Object.defineProperties(wrapper, properties)
+
+  return wrapper
 }

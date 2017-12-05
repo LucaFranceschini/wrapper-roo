@@ -144,6 +144,17 @@ describe('wrap', function () {
       assert.deepEqual(new WrappedPair(42, 'foo'), new WrappedPair42('foo'))
     })
 
+    it('should preserve function name', function () {
+      const wrapped = wrap.aFunction(gimme42)
+      assert.equal(wrapped.name, gimme42.name)
+    })
+
+    it('should preserve number of expected arguments', function () {
+      // wrap a function with a number of arguments > 0
+      const wrapped = wrap.aFunction(Box)
+      assert.equal(wrapped.length, Box.length)
+    })
+
     it('should produce a function as equal as possible to the original one...')
     it('should support getters and setters...')
   })
