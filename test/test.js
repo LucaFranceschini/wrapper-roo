@@ -187,6 +187,19 @@ describe('wrap', function () {
       assert.deepStrictEqual(originalDescriptors, wrappedDescriptors)
     })
 
-    it('should support getters and setters...')
+    it('should work with getters', function () {
+      const idiot = { get name() { return 'luca' } }
+          , descriptor = Object.getOwnPropertyDescriptor(idiot, 'name')
+      descriptor.get = wrap.aFunction(descriptor.get)
+      assert.strictEqual(idiot.name, 'luca')
+    })
+
+    it('should work with setters', function () {
+      const idiot = { set name(name) { this._name = name } }
+          , descriptor = Object.getOwnPropertyDescriptor(idiot, 'name')
+      descriptor.set = wrap.aFunction(descriptor.set)
+      idiot.name = 'luca'
+      assert.strictEqual(idiot._name, 'luca')
+    })
   })
 })
