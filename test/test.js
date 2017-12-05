@@ -20,11 +20,11 @@ describe('wrap', function () {
     })
 
     it('should throw if prehook is not a function', function () {
-      assert.throws(() => wrap.aFunction(42), TypeError)
+      assert.throws(() => wrap.aFunction(gimme42, 'hey'), TypeError)
     })
 
     it('should throw if posthook is not a function', function () {
-      assert.throws(() => wrap.aFunction(42), TypeError)
+      assert.throws(() => wrap.aFunction(gimme42, emptyHook, 'ho'), TypeError)
     })
 
     it('should invoke hooks and function in the right order', function () {
