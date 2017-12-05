@@ -1,5 +1,5 @@
 # wrapper-roo
-![Travis build status](https://travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)
+[![Travis build status](https://travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
 
 ![Ripper Roo](./ripper-roo-small.png)
 
