@@ -1,6 +1,12 @@
 language: node_js
+
 node_js:
-- "node"
-- "lts/*"
+  - "node"
+  - "lts/*"
+
+cache:
+  directories:
+    - "node_modules"
+
 after_success:
-- npm run coveralls
+  - npm run coveralls
