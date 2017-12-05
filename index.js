@@ -46,5 +46,9 @@ exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
   const properties = Object.getOwnPropertyDescriptors(func)
   Object.defineProperties(wrapper, properties)
 
+  // copy prototype
+  const prototype = Object.getPrototypeOf(func)
+  Object.setPrototypeOf(wrapper, prototype)
+
   return wrapper
 }

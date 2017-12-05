@@ -155,6 +155,28 @@ describe('wrap', function () {
       assert.equal(wrapped.length, Box.length)
     })
 
+    it('should preserve Function.prototype property', function () {
+      // change default prototype property
+      const myPrototype = {}
+      function foo() { }
+      foo.prototype = myPrototype
+
+      const wrapped = wrap.aFunction(foo)
+      assert.strictEqual(wrapped.prototype, foo.prototype)
+    })
+
+    it('should preserve the internal prototype', function () {
+      // change prototype and check if it is preserved
+      const myPrototype = {}
+      function foo() { }
+      Object.setPrototypeOf(foo, myPrototype)
+
+      const wrapped = wrap.aFunction(foo)
+          , originalProto = Object.getPrototypeOf(foo)
+          , wrappedProto = Object.getPrototypeOf(wrapped)
+      assert.strictEqual(originalProto, wrappedProto)
+    })
+
     it('should produce a function as equal as possible to the original one...')
     it('should support getters and setters...')
   })
