@@ -1,6 +1,6 @@
 # wrapper-roo
-[![Travis build status](https://travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
-[![Coverage Status](https://coveralls.io/repos/github/LucaFranceschini/wrapper-roo/badge.svg?branch=master)](https://coveralls.io/github/LucaFranceschini/wrapper-roo?branch=master)
+[![Travis build status](https://img.shields.io/travis/LucaFranceschini/wrapper-roo.svg)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
+[![Coverage Status](https://img.shields.io/coveralls/LucaFranceschini/wrapper-roo.svg)](https://coveralls.io/github/LucaFranceschini/wrapper-roo?branch=master)
 
 ![Ripper Roo](./ripper-roo-small.png)
 
