@@ -28,7 +28,7 @@ describe('wrap', function () {
     })
 
     it('should return a function', function () {
-      assert.equal(typeof wrap.aFunction(gimme42), 'function')
+      assert.strictEqual(typeof wrap.aFunction(gimme42), 'function')
     })
 
     it('should return a different function', function () {
@@ -40,7 +40,7 @@ describe('wrap', function () {
       function increment() { ++counter }
       const wrapped = wrap.aFunction(increment)
       wrapped()
-      assert.equal(counter, 1)
+      assert.strictEqual(counter, 1)
     })
 
     it('should invoke prehook exactly once', function () {
@@ -48,7 +48,7 @@ describe('wrap', function () {
       function increment() { ++counter }
       const wrapped = wrap.aFunction(gimme42, increment)
       wrapped()
-      assert.equal(counter, 1)
+      assert.strictEqual(counter, 1)
     })
 
     it('should invoke posthook exactly once', function () {
@@ -56,7 +56,7 @@ describe('wrap', function () {
       function increment() { ++counter }
       const wrapped = wrap.aFunction(gimme42, emptyHook, increment)
       wrapped()
-      assert.equal(counter, 1)
+      assert.strictEqual(counter, 1)
     })
 
     it('should invoke posthook even when throwing', function () {
@@ -91,40 +91,40 @@ describe('wrap', function () {
       try {
         wrapped()
       } catch (e) {
-        assert.equal(error, e)
+        assert.strictEqual(error, e)
       }
     })
 
     // we assume strict mode, so default binding for 'this' is undefined
     it('should preserve default this binding (undefined)', function () {
       const wrapped = wrap.aFunction(gimmeThis)
-      assert.equal(wrapped(), undefined)
+      assert.strictEqual(wrapped(), undefined)
     })
 
     it('should preserve bind()', function () {
-      // do not bind to 'this' here, it's not printable by Mocha if equal fails
+      // do not bind to 'this' here, it's not printable by Mocha (cyclic) if equal fails
       const obj = { }
           , bound = gimmeThis.bind(obj)
           , wrapped = wrap.aFunction(bound)
-      assert.equal(wrapped(), obj)
+      assert.strictEqual(wrapped(), obj)
     })
     
     it('should preserve constructor calls', function () {
       const Wrapped = wrap.aFunction(Box)
-      assert.equal(new Wrapped(42).value, 42)
+      assert.strictEqual(new Wrapped(42).value, 42)
     })
 
     it('should preserve prototypes link in constructor calls', function () {
       const Wrapped = wrap.aFunction(Box)
           , box = new Wrapped(42)
-      assert.equal(Object.getPrototypeOf(box), Box.prototype)
+      assert.strictEqual(Object.getPrototypeOf(box), Box.prototype)
     })
 
     it('should work if called with explicit binding', function () {
       const wrapped = wrap.aFunction(gimmeThis)
           , obj = { }
       // should return undefined and not obj
-      assert.equal(gimmeThis.call(obj, wrapped), wrapped.call(obj, wrapped))
+      assert.strictEqual(gimmeThis.call(obj, wrapped), wrapped.call(obj, wrapped))
     })
 
     it("should allow 'new' to override bind() (partial application)", function () {
@@ -141,19 +141,19 @@ describe('wrap', function () {
       const WrappedPair = wrap.aFunction(Pair)
           , WrappedPair42 = wrap.aFunction(Pair42)
 
-      assert.deepEqual(new Pair(42, 'foo'), new Pair42('foo'))
-      assert.deepEqual(new WrappedPair(42, 'foo'), new WrappedPair42('foo'))
+      assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
+      assert.deepStrictEqual(new WrappedPair(42, 'foo'), new WrappedPair42('foo'))
     })
 
     it('should preserve function name', function () {
       const wrapped = wrap.aFunction(gimme42)
-      assert.equal(wrapped.name, gimme42.name)
+      assert.strictEqual(wrapped.name, gimme42.name)
     })
 
     it('should preserve number of expected arguments', function () {
       // wrap a function with a number of arguments > 0
       const wrapped = wrap.aFunction(Box)
-      assert.equal(wrapped.length, Box.length)
+      assert.strictEqual(wrapped.length, Box.length)
     })
 
     it('should preserve Function.prototype property', function () {
