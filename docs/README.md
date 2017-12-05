@@ -84,21 +84,29 @@ If some properties were added to the function object (*eeeew...*), they are copi
 Also, property descriptors are preserved.
 
 ## Development
-*Testing framework*: Mocha!
+### Tools
+*Testing*: [Mocha](https://mochajs.org/)!
 
-*CI*: Travis!
+*CI*: [Travis](https://travis-ci.org/)!
+
+*Coverage*: [Istanbul](https://istanbul.js.org/)!
+
+*Coverage reporting + CI*: [Coveralls](https://coveralls.io/)!
 
 ### Instructions
 Install Node.js and npm, clone the repo and `cd` into it.
 
 To install dependencies:
-```
+```sh
 $ npm i
 ```
 
 To run tests:
-```
+```sh
 $ npm test
 ```
 
-**Disclaimer**: I still suck at git(hub).
+To get coverage report:
+```sh
+$ npm run coverage
+```
