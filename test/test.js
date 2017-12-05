@@ -73,7 +73,7 @@ describe('wrap', function () {
 
     it('should forward arguments', function () {
       const args = [1, 2, 3]
-      function toWrap(...a) { assert.deepStrictEqual(a, args) }
+      function toWrap() { assert.deepStrictEqual(arguments, args) }
       const wrapped = wrap.aFunction(toWrap)
       wrapped(...args)
     })
