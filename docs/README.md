@@ -101,12 +101,7 @@ To install dependencies:
 $ npm i
 ```
 
-To run tests:
+To run tests and get coverage report:
 ```sh
 $ npm test
-```
-
-To get coverage report:
-```sh
-$ npm run coverage
 ```
