@@ -41,7 +41,8 @@ wrapped()
 yep
 Thrown: 42
 ```
-... however, hooks should *not* throw.
+However, if a hook itself throws its error will be thrown, possibly losing the one thrown by the wrapped function, if any.
+If a prehook throws the wrapped function is not invoked at all.
 
 ### `this` Works
 ```js
