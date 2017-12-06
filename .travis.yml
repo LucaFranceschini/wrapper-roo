@@ -1,8 +1,11 @@
 language: node_js
 
+# test against all active LTS and latest stable
 node_js:
+  - "4"
+  - "6"
+  - "8"
   - "node"
-  - "lts/*"
 
 cache:
   directories:
