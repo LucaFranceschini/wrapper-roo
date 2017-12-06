@@ -8,6 +8,7 @@ function gimme42() { return 42 }
 function gimmeThis() { return this }
 function emptyHook() { }
 function Box(value) { this.value = value }
+function thrower() { throw new Error() }
 
 describe('wrap', function () {
   describe('#aFunction()', function () {
@@ -25,6 +26,45 @@ describe('wrap', function () {
 
     it('should throw if posthook is not a function', function () {
       assert.throws(() => wrap.aFunction(gimme42, emptyHook, 'ho'), TypeError)
+    })
+
+    it('should throw if prehook throws', function () {
+      const wrapped = wrap.aFunction(gimme42, thrower)
+      assert.throws(() => wrapped(), Error)
+    })
+
+    it('should throw if posthook throws', function () {
+      const wrapped = wrap.aFunction(gimme42, emptyHook, thrower)
+      assert.throws(() => wrapped(), Error)
+    })
+
+    it('should throw posthook error even if wrapped function throws', function () {
+      function throw42() { throw 42 }
+      const wrapped = wrap.aFunction(thrower, emptyHook, throw42)
+      assert.throws(() => wrapped(), /42/)
+    })
+
+    it('should call posthook exactly once if wrapped function throws', function () {
+      let counter = 0
+      function increment() { ++counter }
+      const wrapped = wrap.aFunction(thrower, emptyHook, increment)
+      try {
+        wrapped()
+      } catch (e) { }
+      assert.strictEqual(counter, 1)
+    })
+
+    it('should call posthook exactly once if it throws', function () {
+      let counter = 0
+      function incrementAndThrow() {
+        ++counter
+        throw new Error()
+      }
+      const wrapped = wrap.aFunction(gimme42, emptyHook, incrementAndThrow)
+      try {
+        wrapped()
+      } catch (e) { }
+      assert.strictEqual(counter, 1)
     })
 
     it('should invoke hooks and function in the right order', function () {
@@ -72,7 +112,6 @@ describe('wrap', function () {
     it('should invoke posthook even when throwing', function () {
       let invoked = false
       function postHook() { invoked = true }
-      function thrower() { throw new Error() }
       const wrapped = wrap.aFunction(thrower, emptyHook, postHook)
       try {
         wrapped()
@@ -118,7 +157,7 @@ describe('wrap', function () {
           , wrapped = wrap.aFunction(bound)
       assert.strictEqual(wrapped(), obj)
     })
-    
+
     it('should preserve constructor calls', function () {
       const Wrapped = wrap.aFunction(Box)
       assert.strictEqual(new Wrapped(42).value, 42)

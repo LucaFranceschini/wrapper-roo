@@ -24,21 +24,17 @@ exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
   function wrapper() {
     preHook()
 
-    // try-catch needed to invoke postHook if func throws
+    // try-finally needed to always invoke postHook, even if func throws
     try {
       // check if this is a constructor call or not, and do the same
       // new.target undefined only in constructor call (ES5)
-      const result = new.target
+      return new.target
         ? new func(...arguments)
         // forward 'this' binding
         : func.apply(this, arguments)
-
+    } finally {
+      // if posthook throws it overrides wrapped function exception, if any
       postHook()
-      return result
-    } catch (err) {
-      postHook()
-      // rethrow not to lose error and trace
-      throw err
     }
   }
 
