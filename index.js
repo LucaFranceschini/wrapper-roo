@@ -27,7 +27,7 @@ exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
     // try-finally needed to always invoke postHook, even if func throws
     try {
       // check if this is a constructor call or not, and do the same
-      // new.target undefined only in constructor call (ES5)
+      // new.target only defined in constructor call (ES5)
       return new.target
         ? new func(...arguments)
         // forward 'this' binding
