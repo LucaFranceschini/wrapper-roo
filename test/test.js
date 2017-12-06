@@ -11,7 +11,7 @@ function Box(value) { this.value = value }
 function thrower() { throw new Error() }
 
 describe('wrap', function () {
-  describe('#aFunction()', function () {
+  describe('.aFunction()', function () {
     it('should have default hooks', function () {
       wrap.aFunction(gimme42)
     })
@@ -29,19 +29,16 @@ describe('wrap', function () {
     })
 
     it('should throw if prehook throws', function () {
-      const wrapped = wrap.aFunction(gimme42, thrower)
-      assert.throws(() => wrapped(), Error)
+      assert.throws(wrap.aFunction(gimme42, thrower), Error)
     })
 
     it('should throw if posthook throws', function () {
-      const wrapped = wrap.aFunction(gimme42, emptyHook, thrower)
-      assert.throws(() => wrapped(), Error)
+      assert.throws(wrap.aFunction(gimme42, emptyHook, thrower), Error)
     })
 
     it('should throw posthook error even if wrapped function throws', function () {
       function throw42() { throw 42 }
-      const wrapped = wrap.aFunction(thrower, emptyHook, throw42)
-      assert.throws(() => wrapped(), /42/)
+      assert.throws(wrap.aFunction(thrower, emptyHook, throw42), /42/)
     })
 
     it('should call posthook exactly once if wrapped function throws', function () {
