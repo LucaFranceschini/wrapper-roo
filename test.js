@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert')
-    , wrap = require('../index')
+    , wrap = require('./index')
 
 // some functions to be used in tests
 function gimme42() { return 42 }
