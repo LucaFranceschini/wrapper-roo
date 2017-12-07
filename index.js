@@ -12,7 +12,8 @@ module.exports = func => {
   return {
     withPreHook: preHook => wrapPrePostHooks(func, preHook, nop),
     withPostHook: postHook => wrapPrePostHooks(func, nop, postHook),
-    withPrePostHooks: (preHook, postHook) => wrapPrePostHooks(func, preHook, postHook),
+    withPrePostHooks:
+      (preHook, postHook) => wrapPrePostHooks(func, preHook, postHook),
     // mostly useful for testing purposes, both hooks do nothing
     justBecause: () => wrapPrePostHooks(func, nop, nop)
   }

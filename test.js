@@ -152,7 +152,8 @@ describe('wrap(func)', function () {
     })
 
     it('should preserve bind()', function () {
-      // do not bind to 'this' here, it's not printable by Mocha (cyclic) if equal fails
+      // do not bind to 'this' here, it would be the Mocha context
+      // it is cyclic so not printable in case of errors
       const obj = { }
           , bound = gimmeThis.bind(obj)
           , wrapped = wrap(bound).justBecause()
@@ -174,25 +175,28 @@ describe('wrap(func)', function () {
       const wrapped = wrap(gimmeThis).justBecause()
           , obj = { }
       // should return undefined and not obj
-      assert.strictEqual(gimmeThis.call(obj, wrapped), wrapped.call(obj, wrapped))
+      assert.strictEqual(gimmeThis.call(obj, wrapped),
+                         wrapped.call(obj, wrapped))
     })
 
-    it("should allow 'new' to override bind() (partial application)", function () {
-      function Pair(a, b) {
-        this.a = a
-        this.b = b
-      }
+    it("should allow 'new' to override bind() (partial application)",
+      function () {
+        function Pair(a, b) {
+          this.a = a
+          this.b = b
+        }
 
-      // don't care about 'this' here, just fix first argument
-      // 'this' will be overridden by constructor call anyway
-      const Pair42 = Pair.bind(null, 42)
+        // don't care about 'this' here, just fix first argument
+        // 'this' will be overridden by constructor call anyway
+        const Pair42 = Pair.bind(null, 42)
 
-      // wrap both
-      const WrappedPair = wrap(Pair).justBecause()
-          , WrappedPair42 = wrap(Pair42).justBecause()
+        // wrap both
+        const WrappedPair = wrap(Pair).justBecause()
+            , WrappedPair42 = wrap(Pair42).justBecause()
 
-      assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
-      assert.deepStrictEqual(new WrappedPair(42, 'foo'), new WrappedPair42('foo'))
+        assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
+        assert.deepStrictEqual(new WrappedPair(42, 'foo'),
+                               new WrappedPair42('foo'))
     })
 
     it('should preserve function name', function () {
