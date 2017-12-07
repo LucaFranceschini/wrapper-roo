@@ -6,6 +6,9 @@ const assert = require('assert')
 // helper function to be wrapped
 function nop() { }
 function thrower() { throw new Error() }
+// strict mode + lexical this + global scope -> this == { } (global object)
+// don't move it in tests otherwise it captures Mocha context...
+const gimmeGlobalThis = () => this
 
 describe('wrap(func)', function () {
   it('should fail fast if func is not a function', function () {
@@ -254,6 +257,17 @@ describe('wrap(func)', function () {
       descriptor.set = wrap(descriptor.set).justBecause()
       idiot.name = 'luca'
       assert.strictEqual(idiot._name, 'luca')
+    })
+
+    it('should work with arrow functions', function () {
+      const double = n => n*2
+          , wrapped = wrap(double).justBecause()
+      assert.strictEqual(wrapped(42), 84)
+    })
+
+    it('should throw when using arrows as constructors', function () {
+      const wrapped = wrap(() => { }).justBecause()
+      assert.throws(() => new wrapped(), TypeError)
     })
   })
 })
