@@ -6,116 +6,127 @@ const assert = require('assert')
 // some functions to be used in tests
 function gimme42() { return 42 }
 function gimmeThis() { return this }
-function emptyHook() { }
+function nop() { }
 function Box(value) { this.value = value }
 function thrower() { throw new Error() }
 
 describe('wrap', function () {
-  describe('.aFunction()', function () {
-    it('should have default hooks', function () {
-      wrap.aFunction(gimme42)
+  describe('.function(func)', function () {
+    it('should fail fast if func is not a function', function () {
+      assert.throws(() => wrap.function(42), TypeError)
     })
 
-    it('should throw if not wrapping a function', function () {
-      assert.throws(() => wrap.aFunction(42), TypeError)
-    })
+    describe('.withPreHook(preHook)', function () {
+      it('should throw if preHook is not a function', function () {
+        assert.throws(() => wrap.function(gimme42).withPreHook('hey'), TypeError)
+      })
 
-    it('should throw if prehook is not a function', function () {
-      assert.throws(() => wrap.aFunction(gimme42, 'hey'), TypeError)
-    })
+      it('should throw if preHook throws', function () {
+        assert.throws(wrap.function(gimme42).withPreHook(thrower), Error)
+      })
 
-    it('should throw if posthook is not a function', function () {
-      assert.throws(() => wrap.aFunction(gimme42, emptyHook, 'ho'), TypeError)
-    })
-
-    it('should throw if prehook throws', function () {
-      assert.throws(wrap.aFunction(gimme42, thrower), Error)
-    })
-
-    it('should throw if posthook throws', function () {
-      assert.throws(wrap.aFunction(gimme42, emptyHook, thrower), Error)
-    })
-
-    it('should throw posthook error even if wrapped function throws', function () {
-      function throw42() { throw 42 }
-      assert.throws(wrap.aFunction(thrower, emptyHook, throw42), /42/)
-    })
-
-    it('should call posthook exactly once if wrapped function throws', function () {
-      let counter = 0
-      function increment() { ++counter }
-      const wrapped = wrap.aFunction(thrower, emptyHook, increment)
-      try {
+      it('should invoke preHook exactly once', function () {
+        let counter = 0
+        function increment() { ++counter }
+        const wrapped = wrap.function(gimme42).withPreHook(increment)
         wrapped()
-      } catch (e) { }
-      assert.strictEqual(counter, 1)
+        assert.strictEqual(counter, 1)
+      })
     })
 
-    it('should call posthook exactly once if it throws', function () {
-      let counter = 0
-      function incrementAndThrow() {
-        ++counter
-        throw new Error()
+    describe('.withPostHook(postHook)', function () {
+      it('should throw if postHook is not a function', function () {
+        assert.throws(() => wrap.function(gimme42).withPostHook('ho'), TypeError)
+      })
+
+      it('should throw if postHook throws', function () {
+        assert.throws(wrap.function(gimme42).withPostHook(thrower), Error)
+      })
+
+      it('should throw postHook error even if func throws', function () {
+        function throw42() { throw 42 }
+        assert.throws(wrap.function(thrower).withPostHook(throw42), /42/)
+      })
+
+      it('should call postHook exactly once if func throws', function () {
+        let counter = 0
+        function increment() { ++counter }
+        const wrapped = wrap.function(thrower).withPostHook(increment)
+        try {
+          wrapped()
+        } catch (e) { }
+        assert.strictEqual(counter, 1)
+      })
+
+      it('should call postHook exactly once if it throws', function () {
+        let counter = 0
+        function incrementAndThrow() {
+          ++counter
+          throw new Error()
+        }
+        const wrapped = wrap.function(gimme42).withPostHook(incrementAndThrow)
+        try {
+          wrapped()
+        } catch (e) { }
+        assert.strictEqual(counter, 1)
+      })
+
+      it('should invoke postHook exactly once', function () {
+        let counter = 0
+        function increment() { ++counter }
+        const wrapped = wrap.function(gimme42).withPostHook(increment)
+        wrapped()
+        assert.strictEqual(counter, 1)
+      })
+
+      it('should invoke postHook even when func throws', function () {
+        let invoked = false
+        function postHook() { invoked = true }
+        const wrapped = wrap.function(thrower).withPostHook(postHook)
+        try {
+          wrapped()
+        } catch (e) {
+          assert(invoked)
+        }
+      })
+    })
+
+    describe('.withPrePostHooks(preHook, postHook)', function () {
+      it('should invoke hooks and func in the right order', function () {
+        let result = ''
+        function foo() { result += 'b' }
+        const preHook = () => result += 'a'
+            , postHook = () => result += 'c'
+            , wrapped = wrap.function(foo).withPrePostHooks(preHook, postHook)
+        wrapped()
+        assert.strictEqual(result, 'abc')
+      })
+    })
+
+    describe('all functions above', function () {
+      // use this when hooks are not relevant
+      function justWrap(func) {
+        return wrap.function(func).withPrePostHooks(nop, nop)
       }
-      const wrapped = wrap.aFunction(gimme42, emptyHook, incrementAndThrow)
-      try {
-        wrapped()
-      } catch (e) { }
-      assert.strictEqual(counter, 1)
+
+      it('should return a function', function () {
+        assert.strictEqual(justWrap(gimme42), 'function')
+      })
+
+      it('should return a different function', function () {
+        assert.notEqual(justWrap(gimme42), gimme42)
+      })
+
+      it('should invoke func exactly once', function () {
+        let counter = 0
+        function increment() { ++counter }
+        justWrap(increment)()
+        assert.strictEqual(counter, 1)
+      })
     })
 
-    it('should invoke hooks and function in the right order', function () {
-      let result = ''
-      function foo() { result += 'b' }
-      const preHook = () => result += 'a'
-          , postHook = () => result += 'c'
-          , wrapped = wrap.aFunction(foo, preHook, postHook)
-      wrapped()
-      assert.strictEqual(result, 'abc')
-    })
-
-    it('should return a function', function () {
-      assert.strictEqual(typeof wrap.aFunction(gimme42), 'function')
-    })
-
-    it('should return a different function', function () {
-      assert.notEqual(wrap.aFunction(gimme42), gimme42)
-    })
-
-    it('should invoke wrapped function exactly once', function () {
-      let counter = 0
-      function increment() { ++counter }
-      const wrapped = wrap.aFunction(increment)
-      wrapped()
-      assert.strictEqual(counter, 1)
-    })
-
-    it('should invoke prehook exactly once', function () {
-      let counter = 0
-      function increment() { ++counter }
-      const wrapped = wrap.aFunction(gimme42, increment)
-      wrapped()
-      assert.strictEqual(counter, 1)
-    })
-
-    it('should invoke posthook exactly once', function () {
-      let counter = 0
-      function increment() { ++counter }
-      const wrapped = wrap.aFunction(gimme42, emptyHook, increment)
-      wrapped()
-      assert.strictEqual(counter, 1)
-    })
-
-    it('should invoke posthook even when throwing', function () {
-      let invoked = false
-      function postHook() { invoked = true }
-      const wrapped = wrap.aFunction(thrower, emptyHook, postHook)
-      try {
-        wrapped()
-      } catch (e) {
-        assert(invoked)
-      }
-    })
+// TODO from here
+// also move helper declarations
 
     it('should forward arguments', function () {
       const args = [1, 2, 3]

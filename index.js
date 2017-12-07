@@ -1,17 +1,29 @@
 'use strict';
 
+const assert = require('assert')
+
+// fluent API, consider wrap = require('wrapper-roo')
+exports.function = func => {
+  // fail-fast
+  if (typeof func !== 'function')
+    throw new TypeError('The object to be wrapped must be a function')
+
+  // allow chaining
+  return {
+    withPreHook: preHook => wrapPrePostHooks(func, preHook)
+    withPostHook: postHook => wrapPrePostHooks(func, emptyHook, postHook)
+    withPrePostHooks: (preHook, postHook) => wrapPrePostHooks(func, preHook, postHook)
+  }
+}
+
 // default hook, do nothing
 function emptyHook() { }
 
-/*
- * Wrap a given function in a new one always invoking pre- and post-hook.
- * This is a nice alias when doing wrap = require('wrapper-roo').
- * Both arrows and functions are fine here, the arrow 'this' is not used.
- */
-exports.aFunction = (func, preHook = emptyHook, postHook = emptyHook) => {
-  // arguments checking
-  if (typeof func !== 'function')
-    throw new TypeError('The object to be wrapped must be a function')
+// TODO maybe defaults make no sense anymore
+// wrap a given function in a new one always invoking pre- and post-hooks
+function wrapPrePostHooks(func, preHook = emptyHook, postHook = emptyHook) {
+  // func parameter not exposed to the wild
+  assert.equal(typeof func, 'function')
 
   if (typeof preHook !== 'function')
     throw new TypeError('Prehook must be a function')
