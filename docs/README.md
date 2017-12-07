@@ -1,8 +1,8 @@
 # wrapper-roo
+![Ripper Roo](./ripper-roo-small.png)
+
 [![Travis build status](https://img.shields.io/travis/LucaFranceschini/wrapper-roo.svg)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
 [![Coverage Status](https://img.shields.io/coveralls/LucaFranceschini/wrapper-roo.svg)](https://coveralls.io/github/LucaFranceschini/wrapper-roo?branch=master)
-
-![Ripper Roo](./ripper-roo-small.png)
 
 A general JavaScript function wrapper that allows to set pre- and post-hooks, while still being as transparent as possible to the rest of the code.
 Available as a npm module.
