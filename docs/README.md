@@ -15,7 +15,7 @@ The code is currently tested up to ES5 features.
 ```js
 const wrap = require('wrapper-roo')
 function hello(name) { console.log('hello ' + name) }
-let wrapped = wrap.aFunction(hello,
+let wrapped = wrap(hello).withPrePostHooks(
   () => console.log('before'),  // pre-hook
   () => console.log('after'))   // post-hook
 wrapped('Crash')
@@ -32,9 +32,7 @@ Arguments and return value are forwarded, thus the wrapper can be used just like
 Both hooks are always invoked, even if the wrapped function throws.
 If that is the case, the error is then re-thrown:
 ```js
-wrapped = wrap.aFunction(() => {throw 42},
-  () => {},
-  () => console.log('yep'))
+wrapped = wrap(() => {throw 42}).withPostHook(() => console.log('yep'))
 wrapped()
 ```
 ```
@@ -50,7 +48,7 @@ const box = { value: 'yo' }
 box.getValue = function () { return this.value }
 console.log(box.getValue())
 // wrap it
-box.getValue = wrap.aFunction(box.getValue, () => console.log('hey'))  // default empty post-hook
+box.getValue = wrap(box.getValue).withPreHook(() => console.log('hey'))  // default empty post-hook
 console.log(box.getValue())
 ```
 ```
@@ -63,7 +61,7 @@ This (pun intended) means it also works with getters and setters, as well as `Fu
 ### `new` Works
 ```js
 function Idiot(name) { this.name = name }
-const WrappedIdiot = wrap.aFunction(Idiot)  // default empty hooks
+const WrappedIdiot = wrap(Idiot).justBecause()  // default empty hooks
 console.log(new WrappedIdiot('luca'))
 ```
 ```
@@ -74,7 +72,7 @@ In case you're object-oriented, the wrapper correctly handles prototypes so inhe
 ### Function Properties Are Preserved
 ```js
 function foo() { }
-wrapped = wrap.aFunction(foo)
+wrapped = wrap(foo).justBecause()
 console.log(foo.name === wrapped.name)  // 'foo'
 ```
 ```
