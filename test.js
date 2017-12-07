@@ -269,5 +269,83 @@ describe('wrap(func)', function () {
       const wrapped = wrap(() => { }).justBecause()
       assert.throws(() => new wrapped(), TypeError)
     })
+
+    it('should preserve default parameter values', function () {
+      function argOr42(arg = 42) { return arg }
+      const wrapped = wrap(argOr42).justBecause()
+      assert.strictEqual(wrapped(), 42)
+      assert.strictEqual(wrapped(7), 7)
+    })
+
+    it('should preserve rest parameters', function () {
+      const args = [1, 2, 3]
+      function gimmeRestArgs(...a) { return a }
+      const wrapped = wrap(gimmeRestArgs).justBecause()
+      assert.deepStrictEqual(wrapped(...args), args)
+    })
+
+    class Person {
+      constructor(name) {
+        this.name = name
+      }
+    }
+
+    it('should work when func is a class (constructor)', function () {
+      const WrappedPerson = wrap(Person).justBecause()
+      assert.deepStrictEqual(new Person('alonzo'), new WrappedPerson('alonzo'))
+    })
+
+    it('should throw when func is a class but new is not used', function () {
+      const WrappedPerson = wrap(Person).justBecause()
+      assert.throws(() => WrappedPerson('haskell'), TypeError)
+    })
+
+    it('should work with class inheritance', function () {
+      class FullNamePerson extends Person {
+        constructor(firstName, lastName) {
+          super(firstName + ' ' + lastName)
+        }
+      }
+      const WrappedFullNamePerson = wrap(FullNamePerson).justBecause()
+      assert.strictEqual(new WrappedFullNamePerson('ada', 'lovelace').name,
+                         new Person('ada lovelace').name)
+    })
+
+    it('should preserve class static methods', function () {
+      class NiceGuy {
+        constructor() { }
+        static sayHi() { return 'hi' }
+      }
+      const WrappedNiceGuy = wrap(NiceGuy).justBecause()
+      assert.strictEqual(WrappedNiceGuy.sayHi(), 'hi')
+    })
+
+    it('should preserve Symbol properties of func', function () {
+      function foo() { }
+      const symbol = Symbol()
+      foo[symbol] = 'top secret'
+      const wrapped = wrap(foo).justBecause()
+      assert.strictEqual(wrapped[symbol], foo[symbol])
+    })
+
+    it('should work with generator functions', function () {
+      // start inclusive, end exclusive
+      function* range(start, end) {
+        while (start < end) yield start++
+      }
+      let sum = 0
+      const wrappedRange = wrap(range).justBecause()
+      for (const i of wrappedRange(1, 4)) sum += i
+      assert.strictEqual(sum, 6)
+    })
+
+    it('should work when func is a data structure (like Set)', function () {
+      const WrappedSet = wrap(Set).justBecause()
+          , s = new WrappedSet([1, 2, 3]).add(2)
+      assert.strictEqual(s.size, 3)
+      for (const i of [1, 2, 3]) assert(s.has(i))
+    })
+
+    it('should work with WeakSet/WeakMap...')
   })
 })
