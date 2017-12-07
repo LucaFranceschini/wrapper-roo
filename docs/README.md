@@ -15,7 +15,7 @@ The code is currently tested up to ES5 features.
 ```js
 const wrap = require('wrapper-roo')
 function hello(name) { console.log('hello ' + name) }
-let wrapped = wrap(hello).withPrePostHooks(
+const wrapped = wrap(hello).withPrePostHooks(
   () => console.log('before'),  // pre-hook
   () => console.log('after'))   // post-hook
 wrapped('Crash')
@@ -32,7 +32,7 @@ Arguments and return value are forwarded, thus the wrapper can be used just like
 Both hooks are always invoked, even if the wrapped function throws.
 If that is the case, the error is then re-thrown:
 ```js
-wrapped = wrap(() => {throw 42}).withPostHook(() => console.log('yep'))
+const wrapped = wrap(() => {throw 42}).withPostHook(() => console.log('yep'))
 wrapped()
 ```
 ```
@@ -72,7 +72,7 @@ In case you're object-oriented, the wrapper correctly handles prototypes so inhe
 ### Function Properties Are Preserved
 ```js
 function foo() { }
-wrapped = wrap(foo).justBecause()
+const wrapped = wrap(foo).justBecause()
 console.log(foo.name === wrapped.name)  // 'foo'
 ```
 ```
