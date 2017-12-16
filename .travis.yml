@@ -13,3 +13,10 @@ after_success: npm run coverage
 notifications:
   email:
     on_success: never
+
+# Greenkeeper lockfile https://github.com/greenkeeperio/greenkeeper-lockfile
+before_install:
+  - npm install -g npm
+  - npm install -g greenkeeper-lockfile@1
+before_script: greenkeeper-lockfile-update
+after_script: greenkeeper-lockfile-upload
