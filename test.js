@@ -338,5 +338,12 @@ describe('wrap(func)', function () {
       for (const i of wrappedRange(1, 4)) sum += i
       assert.strictEqual(sum, 6)
     })
+
+    it('should preserve non-constructibility', function () {
+      // since ES7 generators are not constructible
+      function* gen() { }
+      const wrapped = wrap(gen).justBecause()
+      assert(() => new wrapped(), TypeError)
+    })
   })
 })

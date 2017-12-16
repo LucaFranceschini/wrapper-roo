@@ -8,7 +8,7 @@
 A general JavaScript function wrapper that allows to set pre- and post-hooks, while still being as transparent as possible to the rest of the code.
 Available as a npm module.
 
-The code is currently tested up to ES5 features.
+The code is currently tested up to ES7 features.
 
 **Still work in progress**
 
