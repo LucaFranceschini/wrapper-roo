@@ -33,7 +33,7 @@ function wrapPrePostHooks(func, preHook, postHook) {
   if (typeof postHook !== 'function')
     throw new TypeError('Posthook must be a function')
 
-  // do not use an arrow here, traditional 'this' binding needed (see below)
+  // don't use an arrow here, traditional 'this' and new.target needed
   // note: the 'this' inside here does not come from the enclosing arrow
   function wrapper() {
     preHook()
