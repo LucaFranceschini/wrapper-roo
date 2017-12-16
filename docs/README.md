@@ -1,4 +1,6 @@
 # wrapper-roo
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/LucaFranceschini/wrapper-roo.svg)](https://greenkeeper.io/)
 ![Ripper Roo](./ripper-roo-small.png)
 
 [![Travis build status](https://img.shields.io/travis/LucaFranceschini/wrapper-roo.svg)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
