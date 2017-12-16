@@ -91,7 +91,7 @@ Also, property descriptors are preserved.
 
 *Coverage*: [Istanbul](https://istanbul.js.org/)!
 
-*Coverage reporting + CI*: [Coveralls](https://coveralls.io/)!
+*Coverage reporting*: [Coveralls](https://coveralls.io/)!
 
 ### Instructions
 Install Node.js and npm, clone the repo and `cd` into it.
