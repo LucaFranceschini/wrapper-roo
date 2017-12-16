@@ -3,6 +3,7 @@
 
 [![Travis build status](https://img.shields.io/travis/LucaFranceschini/wrapper-roo.svg)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
 [![Coverage Status](https://img.shields.io/coveralls/LucaFranceschini/wrapper-roo.svg)](https://coveralls.io/github/LucaFranceschini/wrapper-roo?branch=master)
+[![Greenkeeper badge](https://badges.greenkeeper.io/LucaFranceschini/wrapper-roo.svg)](https://greenkeeper.io/)
 
 A general JavaScript function wrapper that allows to set pre- and post-hooks, while still being as transparent as possible to the rest of the code.
 Available as a npm module.
