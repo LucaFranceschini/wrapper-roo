@@ -338,14 +338,5 @@ describe('wrap(func)', function () {
       for (const i of wrappedRange(1, 4)) sum += i
       assert.strictEqual(sum, 6)
     })
-
-    it('should work when func is a data structure (like Set)', function () {
-      const WrappedSet = wrap(Set).justBecause()
-          , s = new WrappedSet([1, 2, 3]).add(2)
-      assert.strictEqual(s.size, 3)
-      for (const i of [1, 2, 3]) assert(s.has(i))
-    })
-
-    it('should work with WeakSet/WeakMap...')
   })
 })
