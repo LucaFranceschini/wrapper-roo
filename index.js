@@ -43,7 +43,8 @@ function wrapPrePostHooks(func, preHook, postHook) {
       // check if this is a constructor call or not, and do the same
       // new.target only defined in constructor call (ES5)
       return new.target
-        ? new func(...arguments)
+        // use reflection to preserve new.target
+        ? Reflect.construct(func, arguments, new.target)
         // forward 'this' binding
         : func.apply(this, arguments)
     } finally {

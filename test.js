@@ -182,24 +182,23 @@ describe('wrap(func)', function () {
                          wrapped.call(obj, wrapped))
     })
 
-    it("should allow 'new' to override bind() (partial application)",
-      function () {
-        function Pair(a, b) {
-          this.a = a
-          this.b = b
-        }
+    it('should allow partial application with Function.bind', function () {
+      function Pair(a, b) {
+        this.a = a
+        this.b = b
+      }
 
-        // don't care about 'this' here, just fix first argument
-        // 'this' will be overridden by constructor call anyway
-        const Pair42 = Pair.bind(null, 42)
+      // don't care about 'this' here, just fix first argument
+      // 'this' will be overridden by constructor call anyway
+      const Pair42 = Pair.bind(null, 42)
 
-        // wrap both
-        const WrappedPair = wrap(Pair).justBecause()
-            , WrappedPair42 = wrap(Pair42).justBecause()
+      // wrap both
+      const WrappedPair = wrap(Pair).justBecause()
+          , WrappedPair42 = wrap(Pair42).justBecause()
 
-        assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
-        assert.deepStrictEqual(new WrappedPair(42, 'foo'),
-                               new WrappedPair42('foo'))
+      assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
+      assert.deepStrictEqual(new WrappedPair(42, 'foo'),
+                             new WrappedPair42('foo'))
     })
 
     it('should preserve function name', function () {
@@ -344,6 +343,16 @@ describe('wrap(func)', function () {
       function* gen() { }
       const wrapped = wrap(gen).justBecause()
       assert(() => new wrapped(), TypeError)
+    })
+
+    it('should preserve new.target', function () {
+      function someConstructor() { }
+      const WrappedArray = wrap(Array).justBecause()
+      // use the given constructor but inherit from (Wrapped)Array
+      const object = Reflect.construct(WrappedArray, [], someConstructor)
+      assert.strictEqual(Object.getPrototypeOf(object),
+                         someConstructor.prototype)
+      assert(Array.isArray(object))
     })
   })
 })
