@@ -8,8 +8,6 @@
 A general JavaScript function wrapper that allows to set pre- and post-hooks, while still being as transparent as possible to the rest of the code.
 Available as a npm module.
 
-The code is currently tested up to ES7 features.
-
 **Still work in progress**
 
 ## Simplest Example
@@ -82,6 +80,10 @@ true
 The same holds for other *standard* function properties, like arity (`length`) or methods inherited from `Function`.
 If some properties were added to the function object (*eeeew...*), they are copied as well.
 Also, property descriptors are preserved.
+
+### ESMAScript 6+ supported
+The wrapper also works with arrows, classes, generators, and `async`/`await`.
+Basically, if it is a function then it will be correctly wrapped.
 
 ## Development
 ### Tools
