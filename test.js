@@ -168,7 +168,7 @@ describe('wrap(func)', function () {
       assert.strictEqual(new Wrapped(42).value, 42)
     })
 
-    it('should preserve prototypes link in constructor calls', function () {
+    it('should preserve prototype link in constructor calls', function () {
       const Wrapped = wrap(Box).justBecause()
           , box = new Wrapped(42)
       assert.strictEqual(Object.getPrototypeOf(box), Box.prototype)
@@ -182,25 +182,28 @@ describe('wrap(func)', function () {
                          wrapped.call(obj, wrapped))
     })
 
-    it("should allow 'new' to override bind() (partial application)",
-      function () {
-        function Pair(a, b) {
-          this.a = a
-          this.b = b
-        }
+    it('should allow partial application with Function.bind')
+      // this is testing exotic bound function preservation as well...
+      /*, function () {
+      function Pair(a, b) {
+        this.a = a
+        this.b = b
+      }
 
-        // don't care about 'this' here, just fix first argument
-        // 'this' will be overridden by constructor call anyway
-        const Pair42 = Pair.bind(null, 42)
+      // don't care about 'this' here, just fix first argument
+      // 'this' will be overridden by constructor call anyway
+      const Pair42 = Pair.bind(null, 42)
 
-        // wrap both
-        const WrappedPair = wrap(Pair).justBecause()
-            , WrappedPair42 = wrap(Pair42).justBecause()
+      // wrap both
+      const WrappedPair = wrap(Pair).justBecause()
+          , WrappedPair42 = wrap(Pair42).justBecause()
 
-        assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
-        assert.deepStrictEqual(new WrappedPair(42, 'foo'),
-                               new WrappedPair42('foo'))
-    })
+      assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
+      assert.deepStrictEqual(new WrappedPair(42, 'foo'),
+                             new WrappedPair42('foo'))
+      assert.deepStrictEqual(new Pair42('foo'), new WrappedPair42('foo'))
+      // the other combination does not involve explicit binding
+    })*/
 
     it('should preserve function name', function () {
       const wrapped = wrap(gimme42).justBecause()
@@ -344,6 +347,16 @@ describe('wrap(func)', function () {
       function* gen() { }
       const wrapped = wrap(gen).justBecause()
       assert(() => new wrapped(), TypeError)
+    })
+
+    it('should preserve new.target', function () {
+      function someConstructor() { }
+      const WrappedArray = wrap(Array).justBecause()
+      // use the given constructor but inherit from (Wrapped)Array
+      const object = Reflect.construct(WrappedArray, [], someConstructor)
+      assert.strictEqual(Object.getPrototypeOf(object),
+                         someConstructor.prototype)
+      assert(Array.isArray(object))
     })
   })
 })
