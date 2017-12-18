@@ -163,9 +163,9 @@ describe('wrap(func)', function () {
       assert.strictEqual(wrapped(), obj)
     })
 
-    it('should preserve constructor calls', function () {
+    it('should not change constructed objects', function () {
       const Wrapped = wrap(Box).justBecause()
-      assert.strictEqual(new Wrapped(42).value, 42)
+      assert.deepStrictEqual(new Wrapped(42), new Box(42))
     })
 
     it('should preserve prototype link in constructor calls', function () {
