@@ -33,33 +33,23 @@ function wrapPrePostHooks(func, preHook, postHook) {
   if (typeof postHook !== 'function')
     throw new TypeError('Posthook must be a function')
 
-  // don't use an arrow here, traditional 'this' and new.target needed
-  // note: the 'this' inside here does not come from the enclosing arrow
-  function wrapper() {
-    preHook()
+  return new Proxy(func, {
+    apply: (target, thisArg, argumentsList) => {
+      preHook()
+      try {
+        return target.apply(thisArg, argumentsList)
+      } finally {
+        postHook()
+      }
+    },
 
-    // try-finally needed to always invoke postHook, even if func throws
-    try {
-      // check if this is a constructor call or not, and do the same
-      // new.target only defined in constructor call (ES5)
-      return new.target
-        // use reflection to preserve new.target
-        ? Reflect.construct(func, arguments, new.target)
-        // forward 'this' binding
-        : func.apply(this, arguments)
-    } finally {
-      // if posthook throws it overrides wrapped function exception, if any
-      postHook()
+    construct: (target, argumentsList, newTarget) => {
+      preHook()
+      try {
+        return Reflect.construct(target, argumentsList, newTarget)
+      } finally {
+        postHook()
+      }
     }
-  }
-
-  // copy own properties
-  const properties = Object.getOwnPropertyDescriptors(func)
-  Object.defineProperties(wrapper, properties)
-
-  // copy prototype
-  const prototype = Object.getPrototypeOf(func)
-  Object.setPrototypeOf(wrapper, prototype)
-
-  return wrapper
+  })
 }
