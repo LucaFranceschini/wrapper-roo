@@ -148,10 +148,9 @@ describe('wrap(func)', function () {
       }
     })
 
-    // we assume strict mode, so default binding for 'this' is undefined
     it('should preserve default this binding (undefined)', function () {
       const wrapped = wrap(gimmeThis).justBecause()
-      assert.strictEqual(wrapped(), undefined)
+      assert.strictEqual(wrapped(), gimmeThis())
     })
 
     it('should preserve bind()', function () {
@@ -207,7 +206,8 @@ describe('wrap(func)', function () {
       assert(!Object.getOwnPropertyNames(Bound).includes('prototype'))
       Bound.prototype = { }
       const Wrapped = wrap(Bound).justBecause()
-      assert(Object.getOwnPropertyNames(new Wrapped()).includes('bar'))
+      assert.strictEqual(new Bound().bar, 'baz')
+      assert.strictEqual(new Wrapped().bar, 'baz')
     })
 
     it('should allow partial application with Function.bind', function () {
