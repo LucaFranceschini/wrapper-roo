@@ -33,23 +33,35 @@ function wrapPrePostHooks(func, preHook, postHook) {
   if (typeof postHook !== 'function')
     throw new TypeError('Posthook must be a function')
 
-  return new Proxy(func, {
-    apply: (target, thisArg, argumentsList) => {
-      preHook()
-      try {
-        return target.apply(thisArg, argumentsList)
-      } finally {
-        postHook()
-      }
-    },
+  // use proxy objects to wrap the function
+  const handler = { }
+      , proxy = new Proxy(func, handler)
 
-    construct: (target, argumentsList, newTarget) => {
-      preHook()
-      try {
-        return Reflect.construct(target, argumentsList, newTarget)
-      } finally {
-        postHook()
-      }
+  // both in application and construction we use try-finally to be sure to call
+  // the postHook, even if the function throws
+
+  handler.apply = (target, thisArg, argumentsList) => {
+    preHook()
+    try {
+      return target.apply(thisArg, argumentsList)
+    } finally {
+      postHook()
     }
-  })
+  }
+
+  handler.construct = (target, argumentsList, newTarget) => {
+    preHook()
+    try {
+      // when doing new on the proxy, behave like it was done on the function
+      // https://github.com/tc39/ecma262/issues/1052
+      if (newTarget === proxy)
+        newTarget = target
+
+      return Reflect.construct(target, argumentsList, newTarget)
+    } finally {
+      postHook()
+    }
+  }
+
+  return proxy
 }
