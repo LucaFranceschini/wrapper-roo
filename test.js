@@ -148,10 +148,9 @@ describe('wrap(func)', function () {
       }
     })
 
-    // we assume strict mode, so default binding for 'this' is undefined
     it('should preserve default this binding (undefined)', function () {
       const wrapped = wrap(gimmeThis).justBecause()
-      assert.strictEqual(wrapped(), undefined)
+      assert.strictEqual(wrapped(), gimmeThis())
     })
 
     it('should preserve bind()', function () {
@@ -182,9 +181,36 @@ describe('wrap(func)', function () {
                          wrapped.call(obj, wrapped))
     })
 
-    it('should allow partial application with Function.bind')
-      // this is testing exotic bound function preservation as well...
-      /*, function () {
+    it('should not introduce prototype property', function () {
+      const bound = nop.bind(null)  // bind 'this' to null, don't care
+          , wrapped = wrap(bound).justBecause()
+      // bound functions have no 'prototype' property
+      assert(!Object.getOwnPropertyNames(bound).includes('prototype'))
+      // thus it should not be in the wrapped bound function
+      assert(!Object.getOwnPropertyNames(wrapped).includes('prototype'))
+    })
+
+    /* This is seriously evil...
+     * Bound functions have no 'prototype' property by default. When they are
+     * used in constructor calls, the 'prototype' property of the bound
+     * functions is used. A bad man could add a 'prototype' function to the
+     * bound function...
+     * This means that checking existence of such property is not a reliable way
+     * to detect bound functions.
+     * Note: we're not talking about the internal [[Prototype]].
+     */
+    it('should preserve constructor behavior of bound functions', function () {
+      function Foo() { }
+      Foo.prototype.bar = 'baz'
+      const Bound = Foo.bind(null)
+      assert(!Object.getOwnPropertyNames(Bound).includes('prototype'))
+      Bound.prototype = { }
+      const Wrapped = wrap(Bound).justBecause()
+      assert.strictEqual(new Bound().bar, 'baz')
+      assert.strictEqual(new Wrapped().bar, 'baz')
+    })
+
+    it('should allow partial application with Function.bind', function () {
       function Pair(a, b) {
         this.a = a
         this.b = b
@@ -203,7 +229,7 @@ describe('wrap(func)', function () {
                              new WrappedPair42('foo'))
       assert.deepStrictEqual(new Pair42('foo'), new WrappedPair42('foo'))
       // the other combination does not involve explicit binding
-    })*/
+    })
 
     it('should preserve function name', function () {
       const wrapped = wrap(gimme42).justBecause()
