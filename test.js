@@ -1,14 +1,11 @@
 'use strict'
 
 const assert = require('assert')
-    , wrap = require('./index')
+const wrap = require('./index')
 
 // helper function to be wrapped
-function nop() { }
-function thrower() { throw new Error() }
-// strict mode + lexical this + global scope -> this == { } (global object)
-// don't move it in tests otherwise it captures Mocha context...
-const gimmeGlobalThis = () => this
+function nop () { }
+function thrower () { throw new Error() }
 
 describe('wrap(func)', function () {
   it('should fail fast if func is not a function', function () {
@@ -26,7 +23,7 @@ describe('wrap(func)', function () {
 
     it('should invoke preHook exactly once', function () {
       let counter = 0
-      function increment() { ++counter }
+      function increment () { ++counter }
       const wrapped = wrap(nop).withPreHook(increment)
       wrapped()
       assert.strictEqual(counter, 1)
@@ -43,13 +40,14 @@ describe('wrap(func)', function () {
     })
 
     it('should throw postHook error even if func throws', function () {
-      function throw42() { throw 42 }
-      assert.throws(wrap(thrower).withPostHook(throw42), /42/)
+      function MyError () { }
+      function throwMyError () { throw new MyError() }
+      assert.throws(wrap(thrower).withPostHook(throwMyError), MyError)
     })
 
     it('should call postHook exactly once if func throws', function () {
       let counter = 0
-      function increment() { ++counter }
+      function increment () { ++counter }
       const wrapped = wrap(thrower).withPostHook(increment)
       try {
         wrapped()
@@ -59,7 +57,7 @@ describe('wrap(func)', function () {
 
     it('should call postHook exactly once if it throws', function () {
       let counter = 0
-      function incrementAndThrow() {
+      function incrementAndThrow () {
         ++counter
         throw new Error()
       }
@@ -72,7 +70,7 @@ describe('wrap(func)', function () {
 
     it('should invoke postHook exactly once', function () {
       let counter = 0
-      function increment() { ++counter }
+      function increment () { ++counter }
       const wrapped = wrap(nop).withPostHook(increment)
       wrapped()
       assert.strictEqual(counter, 1)
@@ -80,7 +78,7 @@ describe('wrap(func)', function () {
 
     it('should invoke postHook even when func throws', function () {
       let invoked = false
-      function postHook() { invoked = true }
+      function postHook () { invoked = true }
       const wrapped = wrap(thrower).withPostHook(postHook)
       try {
         wrapped()
@@ -93,10 +91,10 @@ describe('wrap(func)', function () {
   describe('.withPrePostHooks(preHook, postHook)', function () {
     it('should invoke hooks and func in the right order', function () {
       let result = ''
-      function foo() { result += 'b' }
-      const preHook = () => result += 'a'
-          , postHook = () => result += 'c'
-          , wrapped = wrap(foo).withPrePostHooks(preHook, postHook)
+      function foo () { result += 'b' }
+      const preHook = () => { result += 'a' }
+      const postHook = () => { result += 'c' }
+      const wrapped = wrap(foo).withPrePostHooks(preHook, postHook)
       wrapped()
       assert.strictEqual(result, 'abc')
     })
@@ -104,9 +102,9 @@ describe('wrap(func)', function () {
 
   describe('all functions above', function () {
     // helper functions to be wrapped
-    function gimme42() { return 42 }
-    function gimmeThis() { return this }
-    function Box(value) { this.value = value }
+    function gimme42 () { return 42 }
+    function gimmeThis () { return this }
+    function Box (value) { this.value = value }
 
     it('should return a function', function () {
       assert.equal(typeof wrap(nop).justBecause(), 'function')
@@ -118,7 +116,7 @@ describe('wrap(func)', function () {
 
     it('should invoke func exactly once', function () {
       let counter = 0
-      function increment() { ++counter }
+      function increment () { ++counter }
       const wrapped = wrap(increment).justBecause()
       wrapped()
       assert.strictEqual(counter, 1)
@@ -127,7 +125,7 @@ describe('wrap(func)', function () {
     it('should forward arguments', function () {
       const args = [1, 2, 3]
       // don't use 'arguments' object, it would not be equal to 'args'
-      function toWrap(...a) { assert.deepStrictEqual(a, args) }
+      function toWrap (...a) { assert.deepStrictEqual(a, args) }
       const wrapped = wrap(toWrap).justBecause()
       wrapped(...args)
     })
@@ -139,7 +137,7 @@ describe('wrap(func)', function () {
 
     it('should re-throw the same error', function () {
       const error = new Error()
-      function thrower() { throw error }
+      function thrower () { throw error }
       const wrapped = wrap(thrower).justBecause()
       try {
         wrapped()
@@ -157,8 +155,8 @@ describe('wrap(func)', function () {
       // do not bind to 'this' here, it would be the Mocha context
       // it is cyclic so not printable in case of errors
       const obj = { }
-          , bound = gimmeThis.bind(obj)
-          , wrapped = wrap(bound).justBecause()
+      const bound = gimmeThis.bind(obj)
+      const wrapped = wrap(bound).justBecause()
       assert.strictEqual(wrapped(), obj)
     })
 
@@ -169,13 +167,13 @@ describe('wrap(func)', function () {
 
     it('should preserve prototype link in constructor calls', function () {
       const Wrapped = wrap(Box).justBecause()
-          , box = new Wrapped(42)
+      const box = new Wrapped(42)
       assert.strictEqual(Object.getPrototypeOf(box), Box.prototype)
     })
 
     it('should work if called with explicit binding', function () {
       const wrapped = wrap(gimmeThis).justBecause()
-          , obj = { }
+      const obj = { }
       // should return undefined and not obj
       assert.strictEqual(gimmeThis.call(obj, wrapped),
                          wrapped.call(obj, wrapped))
@@ -183,7 +181,7 @@ describe('wrap(func)', function () {
 
     it('should not introduce prototype property', function () {
       const bound = nop.bind(null)  // bind 'this' to null, don't care
-          , wrapped = wrap(bound).justBecause()
+      const wrapped = wrap(bound).justBecause()
       // bound functions have no 'prototype' property
       assert(!Object.getOwnPropertyNames(bound).includes('prototype'))
       // thus it should not be in the wrapped bound function
@@ -200,7 +198,7 @@ describe('wrap(func)', function () {
      * Note: we're not talking about the internal [[Prototype]].
      */
     it('should preserve constructor behavior of bound functions', function () {
-      function Foo() { }
+      function Foo () { }
       Foo.prototype.bar = 'baz'
       const Bound = Foo.bind(null)
       assert(!Object.getOwnPropertyNames(Bound).includes('prototype'))
@@ -211,7 +209,7 @@ describe('wrap(func)', function () {
     })
 
     it('should allow partial application with Function.bind', function () {
-      function Pair(a, b) {
+      function Pair (a, b) {
         this.a = a
         this.b = b
       }
@@ -222,7 +220,7 @@ describe('wrap(func)', function () {
 
       // wrap both
       const WrappedPair = wrap(Pair).justBecause()
-          , WrappedPair42 = wrap(Pair42).justBecause()
+      const WrappedPair42 = wrap(Pair42).justBecause()
 
       assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
       assert.deepStrictEqual(new WrappedPair(42, 'foo'),
@@ -245,7 +243,7 @@ describe('wrap(func)', function () {
     it('should preserve Function.prototype property', function () {
       // change default prototype property
       const myPrototype = {}
-      function foo() { }
+      function foo () { }
       foo.prototype = myPrototype
 
       const wrapped = wrap(foo).justBecause()
@@ -255,12 +253,12 @@ describe('wrap(func)', function () {
     it('should preserve the internal prototype', function () {
       // change prototype and check if it is preserved
       const myPrototype = {}
-      function foo() { }
+      function foo () { }
       Object.setPrototypeOf(foo, myPrototype)
 
       const wrapped = wrap(foo).justBecause()
-          , originalProto = Object.getPrototypeOf(foo)
-          , wrappedProto = Object.getPrototypeOf(wrapped)
+      const originalProto = Object.getPrototypeOf(foo)
+      const wrappedProto = Object.getPrototypeOf(wrapped)
       assert.strictEqual(originalProto, wrappedProto)
     })
 
@@ -268,39 +266,42 @@ describe('wrap(func)', function () {
     it('should copy all own properties', function () {
       // wrap a function with a number of arguments > 0 to avoid default
       const wrapped = wrap(Box).justBecause()
-          , originalDescriptors = Object.getOwnPropertyDescriptors(Box)
-          , wrappedDescriptors = Object.getOwnPropertyDescriptors(wrapped)
+      const originalDescriptors = Object.getOwnPropertyDescriptors(Box)
+      const wrappedDescriptors = Object.getOwnPropertyDescriptors(wrapped)
       assert.deepStrictEqual(originalDescriptors, wrappedDescriptors)
     })
 
     it('should work with getters', function () {
-      const idiot = { get name() { return 'luca' } }
-          , descriptor = Object.getOwnPropertyDescriptor(idiot, 'name')
+      const idiot = { get name () { return 'luca' } }
+      const descriptor = Object.getOwnPropertyDescriptor(idiot, 'name')
       descriptor.get = wrap(descriptor.get).justBecause()
       assert.strictEqual(idiot.name, 'luca')
     })
 
     it('should work with setters', function () {
-      const idiot = { set name(name) { this._name = name } }
-          , descriptor = Object.getOwnPropertyDescriptor(idiot, 'name')
+      const idiot = {
+        set name (name) { this._name = name },
+        get name () { return this._name }
+      }
+      const descriptor = Object.getOwnPropertyDescriptor(idiot, 'name')
       descriptor.set = wrap(descriptor.set).justBecause()
       idiot.name = 'luca'
       assert.strictEqual(idiot._name, 'luca')
     })
 
     it('should work with arrow functions', function () {
-      const double = n => n*2
-          , wrapped = wrap(double).justBecause()
+      const double = n => n * 2
+      const wrapped = wrap(double).justBecause()
       assert.strictEqual(wrapped(42), 84)
     })
 
     it('should throw when using arrows as constructors', function () {
-      const wrapped = wrap(() => { }).justBecause()
-      assert.throws(() => new wrapped(), TypeError)
+      const Wrapped = wrap(() => { }).justBecause()
+      assert.throws(() => new Wrapped(), TypeError)
     })
 
     it('should preserve default parameter values', function () {
-      function argOr42(arg = 42) { return arg }
+      function argOr42 (arg = 42) { return arg }
       const wrapped = wrap(argOr42).justBecause()
       assert.strictEqual(wrapped(), 42)
       assert.strictEqual(wrapped(7), 7)
@@ -308,13 +309,13 @@ describe('wrap(func)', function () {
 
     it('should preserve rest parameters', function () {
       const args = [1, 2, 3]
-      function gimmeRestArgs(...a) { return a }
+      function gimmeRestArgs (...a) { return a }
       const wrapped = wrap(gimmeRestArgs).justBecause()
       assert.deepStrictEqual(wrapped(...args), args)
     })
 
     class Person {
-      constructor(name) {
+      constructor (name) {
         this.name = name
       }
     }
@@ -331,7 +332,7 @@ describe('wrap(func)', function () {
 
     it('should work with class inheritance', function () {
       class FullNamePerson extends Person {
-        constructor(firstName, lastName) {
+        constructor (firstName, lastName) {
           super(firstName + ' ' + lastName)
         }
       }
@@ -342,16 +343,15 @@ describe('wrap(func)', function () {
 
     it('should preserve class static methods', function () {
       class NiceGuy {
-        constructor() { }
-        static sayHi() { return 'hi' }
+        static sayHi () { return 'hi' }
       }
       const WrappedNiceGuy = wrap(NiceGuy).justBecause()
       assert.strictEqual(WrappedNiceGuy.sayHi(), 'hi')
     })
 
     it('should preserve Symbol properties of func', function () {
-      function foo() { }
-      const symbol = Symbol()
+      function foo () { }
+      const symbol = Symbol('shh')
       foo[symbol] = 'top secret'
       const wrapped = wrap(foo).justBecause()
       assert.strictEqual(wrapped[symbol], foo[symbol])
@@ -359,7 +359,7 @@ describe('wrap(func)', function () {
 
     it('should work with generator functions', function () {
       // start inclusive, end exclusive
-      function* range(start, end) {
+      function * range (start, end) {
         while (start < end) yield start++
       }
       let sum = 0
@@ -370,13 +370,13 @@ describe('wrap(func)', function () {
 
     it('should preserve non-constructibility', function () {
       // since ES7 generators are not constructible
-      function* gen() { }
-      const wrapped = wrap(gen).justBecause()
-      assert(() => new wrapped(), TypeError)
+      function * gen () { }
+      const Wrapped = wrap(gen).justBecause()
+      assert(() => new Wrapped(), TypeError)
     })
 
     it('should preserve new.target', function () {
-      function someConstructor() { }
+      function someConstructor () { }
       const WrappedArray = wrap(Array).justBecause()
       // use the given constructor but inherit from (Wrapped)Array
       const object = Reflect.construct(WrappedArray, [], someConstructor)

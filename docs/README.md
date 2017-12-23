@@ -4,6 +4,7 @@
 [![Travis build status](https://img.shields.io/travis/LucaFranceschini/wrapper-roo.svg?branch=master)](https://travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)
 [![Coverage Status](https://img.shields.io/coveralls/LucaFranceschini/wrapper-roo.svg)](https://coveralls.io/github/LucaFranceschini/wrapper-roo?branch=master)
 [![Greenkeeper badge](https://badges.greenkeeper.io/LucaFranceschini/wrapper-roo.svg)](https://greenkeeper.io/)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 A general JavaScript function wrapper that allows to set pre- and post-hooks, while still being as transparent as possible to the rest of the code.
 Available as a npm module.
@@ -94,6 +95,8 @@ Basically, if it is a function then it will be correctly wrapped.
 *Coverage*: [Istanbul](https://istanbul.js.org/)!
 
 *Coverage reporting*: [Coveralls](https://coveralls.io/)!
+
+*Linter*: [JavaScript Standard Style](https://standardjs.com/)
 
 ### Instructions
 Install Node.js and npm, clone the repo and `cd` into it.
