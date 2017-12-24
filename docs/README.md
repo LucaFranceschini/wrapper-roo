@@ -88,15 +88,15 @@ Basically, if it is a function then it will be correctly wrapped.
 
 ## Development
 ### Tools
-*Testing*: [Mocha](https://mochajs.org/)!
+*Continuous integration*: [Travis](https://travis-ci.org/)
 
-*CI*: [Travis](https://travis-ci.org/)!
+*Testing*: [Mocha](https://mochajs.org/)
 
-*Coverage*: [Istanbul](https://istanbul.js.org/)!
-
-*Coverage reporting*: [Coveralls](https://coveralls.io/)!
+*Coverage*: [Istanbul](https://istanbul.js.org/) + [Coveralls](https://coveralls.io/)
 
 *Linter*: [JavaScript Standard Style](https://standardjs.com/)
+
+*Dependencies*: [Greenkeeper](https://greenkeeper.io/)
 
 ### Instructions
 Install Node.js and npm, clone the repo and `cd` into it.
