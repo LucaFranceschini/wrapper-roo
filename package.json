@@ -1,11 +1,8 @@
 {
   "name": "wrapper-roo",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "JavaScript transparent function wrapper",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "test": "standard && nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
@@ -33,6 +30,11 @@
     "standard": "*"
   },
   "standard": {
-    "env": [ "mocha" ]
+    "env": [
+      "mocha"
+    ]
+  },
+  "engines": {
+    "node": "8.x"
   }
 }
