@@ -1,31 +1,21 @@
 'use strict'
 
-const assert = require('assert')
-
 // fluent API, consider wrap = require('wrapper-roo')
-// don't put much logic here, except fail-fast
-module.exports = func => {
-  checkFunction(func, 'The object to be wrapped must be a function')
-
-  // allow chaining
-  return {
-    withPreHook: preHook => wrapPrePostHooks(func, preHook, nop),
-    withPostHook: postHook => wrapPrePostHooks(func, nop, postHook),
-    withPrePostHooks:
-      (preHook, postHook) => wrapPrePostHooks(func, preHook, postHook),
-    // mostly useful for testing purposes, both hooks do nothing
-    justBecause: () => wrapPrePostHooks(func, nop, nop)
-  }
-}
+// don't put logic here
+module.exports = func => ({  // parens needed not to parse it like an object
+  withPreHook: pre => wrapPrePostHooks(func, pre, nop),
+  withPostHook: post => wrapPrePostHooks(func, nop, post),
+  withPrePostHooks: (pre, post) => wrapPrePostHooks(func, pre, post),
+  // mostly useful for testing purposes, both hooks do nothing
+  justBecause: () => wrapPrePostHooks(func, nop, nop)
+})
 
 // default hook, do nothing
 function nop () { }
 
 // wrap a given function in a new one always invoking pre- and post-hooks
 function wrapPrePostHooks (func, preHook, postHook) {
-  // func parameter not exposed to the wild
-  assert.equal(typeof func, 'function')
-
+  checkFunction(func, 'The object to be wrapped must be a function')
   checkFunction(preHook, 'Prehook must be a function')
   checkFunction(postHook, 'Posthook must be a function')
 
@@ -50,7 +40,9 @@ function wrapPrePostHooks (func, preHook, postHook) {
     try {
       // when doing new on the proxy, behave like it was done on the function
       // https://github.com/tc39/ecma262/issues/1052
-      if (newTarget === proxy) { newTarget = target }
+      if (newTarget === proxy) {
+        newTarget = target
+      }
 
       return Reflect.construct(target, argumentsList, newTarget)
     } finally {
