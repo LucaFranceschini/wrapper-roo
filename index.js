@@ -5,7 +5,7 @@ const assert = require('assert')
 // fluent API, consider wrap = require('wrapper-roo')
 // don't put much logic here, except fail-fast
 module.exports = func => {
-  if (typeof func !== 'function') { throw new TypeError('The object to be wrapped must be a function') }
+  checkFunction(func, 'The object to be wrapped must be a function')
 
   // allow chaining
   return {
@@ -26,9 +26,8 @@ function wrapPrePostHooks (func, preHook, postHook) {
   // func parameter not exposed to the wild
   assert.equal(typeof func, 'function')
 
-  if (typeof preHook !== 'function') { throw new TypeError('Prehook must be a function') }
-
-  if (typeof postHook !== 'function') { throw new TypeError('Posthook must be a function') }
+  checkFunction(preHook, 'Prehook must be a function')
+  checkFunction(postHook, 'Posthook must be a function')
 
   // use proxy objects to wrap the function
   const handler = { }
@@ -60,4 +59,13 @@ function wrapPrePostHooks (func, preHook, postHook) {
   }
 
   return proxy
+}
+
+// ensure it is a function
+function checkFunction (func, errorMessage) {
+  if (typeof func !== 'function') {
+    throw new TypeError(errorMessage)
+  }
+
+  return func
 }
