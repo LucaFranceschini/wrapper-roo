@@ -32,7 +32,8 @@ Arguments and return value are forwarded, thus the wrapper can be used just like
 Both hooks are always invoked, even if the wrapped function throws.
 If that is the case, the error is then re-thrown:
 ```js
-const wrapped = wrap(() => {throw 42}).withPostHook(() => console.log('yep'))
+const wrapped = wrap(() => {throw 42})
+  .withPostHook(() => console.log('yep'))
 wrapped()
 ```
 ```
@@ -47,8 +48,9 @@ If a prehook throws the wrapped function is not invoked at all.
 const box = { value: 'yo' }
 box.getValue = function () { return this.value }
 console.log(box.getValue())
-// wrap it
-box.getValue = wrap(box.getValue).withPreHook(() => console.log('hey'))  // default empty post-hook
+// wrap it (default empty post-hook)
+box.getValue = wrap(box.getValue)
+  .withPreHook(() => console.log('hey'))
 console.log(box.getValue())
 ```
 ```
@@ -61,7 +63,8 @@ This (pun intended) means it also works with getters and setters, as well as `Fu
 ### `new` Works
 ```js
 function Idiot(name) { this.name = name }
-const WrappedIdiot = wrap(Idiot).justBecause()  // default empty hooks
+// default empty hooks
+const WrappedIdiot = wrap(Idiot).justBecause()
 console.log(new WrappedIdiot('luca'))
 ```
 ```
