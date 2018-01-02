@@ -106,7 +106,7 @@ To install dependencies:
 $ npm i
 ```
 
-To run tests and get coverage report:
+To run linter, tests and get coverage report:
 ```sh
 $ npm test
 ```
