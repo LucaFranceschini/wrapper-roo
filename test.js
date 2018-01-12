@@ -370,11 +370,4 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
                        someConstructor.prototype)
     assert(Array.isArray(object))
   })
-
-  it('should preserve toString on bound functions') /*, function () {
-    // Function.prototype.toString requires that 'this' be a Function
-    const bound = nop.bind(null)
-    const wrapped = wrap(bound).justBecause()
-    assert.strictEqual(wrapped.toString(), bound.toString())
-  }) */
 })
