@@ -1,183 +1,168 @@
 'use strict'
 
-const assert = require('assert')
+const assert = require('assert')  // TODO REMOVE
+
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const sinon = require('sinon')
+const sinonChai = require('sinon-chai')  // load after dirty-chai
 const wrap = require('./index')
 
-// helper functions to be wrapped
-function nop () { }
-function thrower () { throw new Error() }
-function gimme42 () { return 42 }
-function gimmeThis () { return this }
-function Box (value) { this.value = value }
-class Person {
-  constructor (name) {
-    this.name = name
-  }
-}
+const should = chai.should()  // use should-style assertions
+chai.use(dirtyChai)  // lint-friendly assertions
+chai.use(sinonChai)  // Sinon mocking framework
 
+// arrows are discouraged within Mocha, use regular functions
 describe('wrapPrePostHooks(func, preHook, postHook)', function () {
-  it('should throw if preHook is not a function', function () {
-    assert.throws(() => wrap(nop).withPreHook('hey'), TypeError)
+  // helpers and utils
+  function nop () { }
+  function throwError () { throw new Error() }
+  function throw42 () { throw new Error(42) }
+  const spy = sinon.spy()
+
+  function gimme42 () { return 42 }
+  function gimmeThis () { return this }
+  function Box (value) { this.value = value }
+  class Person {
+    constructor (name) {
+      this.name = name
+    }
+  }
+
+  // make the spy reusable
+  beforeEach(function () {
+    spy.resetHistory()
   })
 
-  it('should throw if preHook throws', function () {
-    assert.throws(wrap(nop).withPreHook(thrower), Error)
+  it('should throw if preHook is not a function', function () {
+    (() => wrap(nop).withPreHook('hey')).should.throw(TypeError)
+  })
+
+  it('should propagate the error if preHook throws', function () {
+    wrap(nop).withPreHook(throw42).should.throw(/42/)
   })
 
   it('should invoke preHook exactly once', function () {
-    let counter = 0
-    function increment () { ++counter }
-    const wrapped = wrap(nop).withPreHook(increment)
+    const wrapped = wrap(nop).withPreHook(spy)
     wrapped()
-    assert.strictEqual(counter, 1)
+    spy.should.have.been.calledOnce()
   })
 
   it('should throw if postHook is not a function', function () {
-    assert.throws(() => wrap(nop).withPostHook('ho'), TypeError)
+    (() => wrap(nop).withPostHook('ho')).should.throw(TypeError)
   })
 
-  it('should throw if postHook throws', function () {
-    assert.throws(wrap(nop).withPostHook(thrower), Error)
+  it('should propagate the error if postHook throws', function () {
+    wrap(nop).withPostHook(throw42).should.throw(/42/)
   })
 
   it('should throw postHook error even if func throws', function () {
-    function MyError () { }
-    function throwMyError () { throw new MyError() }
-    assert.throws(wrap(thrower).withPostHook(throwMyError), MyError)
+    wrap(throwError).withPostHook(throw42).should.throw(/42/)
   })
 
-  it('should call postHook exactly once if func throws', function () {
-    let counter = 0
-    function increment () { ++counter }
-    const wrapped = wrap(thrower).withPostHook(increment)
-    try {
-      wrapped()
-    } catch (e) { }
-    assert.strictEqual(counter, 1)
+  it('should call postHook exactly once even if func throws', function () {
+    const wrapped = wrap(throw42).withPostHook(spy)
+    wrapped.should.throw(/42/)
+    spy.should.have.been.calledOnce()
   })
 
-  it('should call postHook exactly once if it throws', function () {
-    let counter = 0
-    function incrementAndThrow () {
-      ++counter
-      throw new Error()
-    }
-    const wrapped = wrap(nop).withPostHook(incrementAndThrow)
-    try {
-      wrapped()
-    } catch (e) { }
-    assert.strictEqual(counter, 1)
+  it('should call postHook exactly once even if it throws', function () {
+    const spy = sinon.spy(throw42)
+    const wrapped = wrap(nop).withPostHook(spy)
+    wrapped.should.throw(/42/)
+    spy.should.have.been.calledOnce()
   })
 
   it('should invoke postHook exactly once', function () {
-    let counter = 0
-    function increment () { ++counter }
-    const wrapped = wrap(nop).withPostHook(increment)
+    const wrapped = wrap(nop).withPostHook(spy)
     wrapped()
-    assert.strictEqual(counter, 1)
+    spy.should.have.been.calledOnce()
   })
 
   it('should invoke postHook even when func throws', function () {
-    let invoked = false
-    function postHook () { invoked = true }
-    const wrapped = wrap(thrower).withPostHook(postHook)
-    try {
-      wrapped()
-    } catch (e) {
-      assert(invoked)
-    }
+    const wrapped = wrap(throw42).withPostHook(spy)
+    wrapped.should.throw(/42/)
+    spy.should.have.been.calledOnce()
   })
 
   it('should invoke hooks and func in the right order', function () {
-    let result = ''
-    function foo () { result += 'b' }
-    const preHook = () => { result += 'a' }
-    const postHook = () => { result += 'c' }
-    const wrapped = wrap(foo).withPrePostHooks(preHook, postHook)
+    const preSpy = sinon.spy()
+    const postSpy = sinon.spy()
+    const wrapped = wrap(spy).withPrePostHooks(preSpy, postSpy)
     wrapped()
-    assert.strictEqual(result, 'abc')
+    preSpy.should.have.been.calledImmediatelyBefore(spy)
+    postSpy.should.have.been.calledImmediatelyAfter(spy)
   })
 
   it('should return a function', function () {
-    assert.equal(typeof wrap(nop).justBecause(), 'function')
+    wrap(nop).justBecause().should.be.a('function')
   })
 
   it('should return a different function', function () {
-    assert.notEqual(wrap(nop).justBecause(), gimme42)
+    wrap(nop).justBecause().should.not.equal(nop)
   })
 
   it('should invoke func exactly once', function () {
-    let counter = 0
-    function increment () { ++counter }
-    const wrapped = wrap(increment).justBecause()
+    const wrapped = wrap(spy).justBecause()
     wrapped()
-    assert.strictEqual(counter, 1)
+    spy.should.have.been.calledOnce()
   })
 
   it('should forward arguments', function () {
     const args = [1, 2, 3]
-    // don't use 'arguments' object, it would not be equal to 'args'
-    function toWrap (...a) { assert.deepStrictEqual(a, args) }
-    const wrapped = wrap(toWrap).justBecause()
+    const wrapped = wrap(spy).justBecause()
     wrapped(...args)
+    spy.should.always.have.been.calledWithExactly(...args)
   })
 
   it('should forward return value', function () {
     const wrapped = wrap(gimme42).justBecause()
-    assert.strictEqual(wrapped(), gimme42())
+    wrapped().should.equal(42)
   })
 
   it('should re-throw the same error', function () {
-    const error = new Error()
-    function thrower () { throw error }
-    const wrapped = wrap(thrower).justBecause()
-    try {
-      wrapped()
-    } catch (e) {
-      assert.strictEqual(error, e)
-    }
+    wrap(throw42).justBecause().should.throw(/42/)
   })
 
+  // default `this` binding is `undefined` in strict mode for non-arrows
   it('should preserve default this binding (undefined)', function () {
     const wrapped = wrap(gimmeThis).justBecause()
-    assert.strictEqual(wrapped(), gimmeThis())
+    should.equal(wrapped(), gimmeThis())
   })
 
-  it('should preserve bind()', function () {
+  it('should preserve bind() explicit binding', function () {
     // do not bind to 'this' here, it would be the Mocha context
     // it is cyclic so not printable in case of errors
     const obj = { }
     const bound = gimmeThis.bind(obj)
     const wrapped = wrap(bound).justBecause()
-    assert.strictEqual(wrapped(), obj)
+    wrapped().should.equal(obj)
   })
 
   it('should not change constructed objects', function () {
     const Wrapped = wrap(Box).justBecause()
-    assert.deepStrictEqual(new Wrapped(42), new Box(42))
+    new Wrapped(42).should.deep.equal(new Box(42))
   })
 
   it('should preserve prototype link in constructor calls', function () {
     const Wrapped = wrap(Box).justBecause()
     const box = new Wrapped(42)
-    assert.strictEqual(Object.getPrototypeOf(box), Box.prototype)
+    Object.getPrototypeOf(box).should.equal(Box.prototype)
   })
 
-  it('should work if called with explicit binding', function () {
+  it('should preserve call() explicit binding', function () {
     const wrapped = wrap(gimmeThis).justBecause()
     const obj = { }
-    // should return undefined and not obj
-    assert.strictEqual(gimmeThis.call(obj, wrapped),
-                       wrapped.call(obj, wrapped))
+    wrapped.call(obj).should.equal(gimmeThis.call(obj))
   })
 
   it('should not introduce prototype property', function () {
     const bound = nop.bind(null)  // bind 'this' to null, don't care
     const wrapped = wrap(bound).justBecause()
     // bound functions have no 'prototype' property
-    assert(!Object.getOwnPropertyNames(bound).includes('prototype'))
-    // thus it should not be in the wrapped bound function
-    assert(!Object.getOwnPropertyNames(wrapped).includes('prototype'))
+    bound.should.not.have.own.property('prototype')
+    // thus it should not be in the wrapped bound function (not even inherited)
+    wrapped.should.not.have.property('prototype')
   })
 
   /* This is seriously evil...
