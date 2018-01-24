@@ -240,13 +240,27 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     wrappedProto.should.equal(originalProto)
   })
 
-  // this also checks for properties whose key is a Symbol
-  it('should copy all own properties', function () {
-    // wrap a function with a number of arguments > 0 to avoid default
-    const wrapped = wrap(Box).justBecause()
-    const originalDescriptors = Object.getOwnPropertyDescriptors(Box)
-    const wrappedDescriptors = Object.getOwnPropertyDescriptors(wrapped)
-    assert.deepStrictEqual(originalDescriptors, wrappedDescriptors)
+  /* The following tests only look at own properties because inherited ones are
+   * handled by copying the internal prototype. Also, descriptor flags are set
+   * to non-default values to do more meaningful tests.
+   */
+
+  it('should copy own property data descriptors', function () {
+    function foo () { }
+    const descriptor = {
+      configurable: true,
+      enumerable: true,
+      value: 42,
+      writable: true
+    }
+    Object.defineProperty(foo, 'bar', descriptor)
+    wrap(foo).justBecause().should.have.ownPropertyDescriptor('bar', descriptor)
+  })
+
+  it('should preserve prototype descriptors list', function () {
+    const originalDescriptors = Object.getOwnPropertyDescriptors(nop)
+    const wrappedDescriptors = Object.getOwnPropertyDescriptors(wrap(nop).justBecause())
+    wrappedDescriptors.should.deep.equal(originalDescriptors)
   })
 
   it('should work with getters', function () {
