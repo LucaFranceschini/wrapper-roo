@@ -18,11 +18,11 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   function nop () { }
   function throwError () { throw new Error() }
   function throw42 () { throw new Error(42) }
+  function Box (value) { this.value = value }
   const spy = sinon.spy()
 
   function gimme42 () { return 42 }
   function gimmeThis () { return this }
-  function Box (value) { this.value = value }
   class Person {
     constructor (name) {
       this.name = name
@@ -156,13 +156,13 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     wrapped.call(obj).should.equal(gimmeThis.call(obj))
   })
 
+  // vanilla functions have 'prototype' property by default
+  // however some functions don't, like bound functions
   it('should not introduce prototype property', function () {
     const bound = nop.bind(null)  // bind 'this' to null, don't care
     const wrapped = wrap(bound).justBecause()
-    // bound functions have no 'prototype' property
     bound.should.not.have.own.property('prototype')
-    // thus it should not be in the wrapped bound function (not even inherited)
-    wrapped.should.not.have.property('prototype')
+    wrapped.should.not.have.property('prototype')  // not even inherited
   })
 
   /* This is seriously evil...
@@ -176,13 +176,24 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
    */
   it('should preserve constructor behavior of bound functions', function () {
     function Foo () { }
-    Foo.prototype.bar = 'baz'
-    const Bound = Foo.bind(null)
-    assert(!Object.getOwnPropertyNames(Bound).includes('prototype'))
+    const Bound = Foo.bind(null)  // bind 'this' to null, don't care
+    Bound.should.not.have.property('prototype')
+
+    // now add a prototype property (this shouldn't happen in real code...)
     Bound.prototype = { }
+    // note that this has nothing to do with the original one
+    Bound.prototype.should.not.equal(Foo.prototype)
+
+    // new objects should get the original prototype, not the bound one
+    let prototype = Object.getPrototypeOf(new Bound())
+    prototype.should.equal(Foo.prototype)
+    prototype.should.not.equal(Bound.prototype)
+
+    // and the same happens with the wrapper
     const Wrapped = wrap(Bound).justBecause()
-    assert.strictEqual(new Bound().bar, 'baz')
-    assert.strictEqual(new Wrapped().bar, 'baz')
+    prototype = Object.getPrototypeOf(new Wrapped())
+    prototype.should.equal(Foo.prototype)
+    prototype.should.not.equal(Bound.prototype)
   })
 
   it('should allow partial application with Function.bind', function () {
@@ -199,44 +210,34 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     const WrappedPair = wrap(Pair).justBecause()
     const WrappedPair42 = wrap(Pair42).justBecause()
 
-    assert.deepStrictEqual(new Pair(42, 'foo'), new Pair42('foo'))
-    assert.deepStrictEqual(new WrappedPair(42, 'foo'),
-                           new WrappedPair42('foo'))
-    assert.deepStrictEqual(new Pair42('foo'), new WrappedPair42('foo'))
-    // the other combination does not involve explicit binding
+    new Pair(42, 'foo').should.deep.equal(new Pair42('foo'))
+    new WrappedPair(42, 'foo').should.deep.equal(new WrappedPair42('foo'))
+    new Pair42('foo').should.deep.equal(new WrappedPair42('foo'))
   })
 
   it('should preserve function name', function () {
-    const wrapped = wrap(gimme42).justBecause()
-    assert.strictEqual(wrapped.name, gimme42.name)
+    wrap(nop).justBecause().name.should.equal(nop.name)
   })
 
   it('should preserve number of expected arguments', function () {
-    // wrap a function with a number of arguments > 0
-    const wrapped = wrap(Box).justBecause()
-    assert.strictEqual(wrapped.length, Box.length)
+    // wrap a function with a number of arguments > 0 not to involve defaults
+    wrap(Box).justBecause().length.should.equal(Box.length)
   })
 
-  it('should preserve Function.prototype property', function () {
-    // change default prototype property
-    const myPrototype = {}
-    function foo () { }
-    foo.prototype = myPrototype
-
-    const wrapped = wrap(foo).justBecause()
-    assert.strictEqual(wrapped.prototype, foo.prototype)
+  it('should preserve prototype property', function () {
+    wrap(Box).justBecause().prototype.should.equal(Box.prototype)
   })
 
   it('should preserve the internal prototype', function () {
     // change prototype and check if it is preserved
-    const myPrototype = {}
+    // (otherwise all functions use the same one)
     function foo () { }
-    Object.setPrototypeOf(foo, myPrototype)
+    Object.setPrototypeOf(foo, { })
 
     const wrapped = wrap(foo).justBecause()
     const originalProto = Object.getPrototypeOf(foo)
     const wrappedProto = Object.getPrototypeOf(wrapped)
-    assert.strictEqual(originalProto, wrappedProto)
+    wrappedProto.should.equal(originalProto)
   })
 
   // this also checks for properties whose key is a Symbol
