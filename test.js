@@ -1,7 +1,5 @@
 'use strict'
 
-const assert = require('assert')  // TODO REMOVE
-
 const chai = require('chai')
 const dirtyChai = require('dirty-chai')
 const sinon = require('sinon')
@@ -276,8 +274,8 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
       set: function (name) { return (this._name = name) }
     })
     const wrapped = wrap(idiot).justBecause()
-    wrapped.name = 'Forrest'
-    ;(wrapped.name).should.equal('Forrest')
+    wrapped.name = 'forrest'
+    ;(wrapped.name).should.equal('forrest')
   })
 
   it('should work with arrow functions', function () {
@@ -300,12 +298,13 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
 
   it('should work when func is a class (constructor)', function () {
     const WrappedPerson = wrap(Person).justBecause()
-    assert.deepStrictEqual(new Person('alonzo'), new WrappedPerson('alonzo'))
+    new Person('alonzo').should.be.deep.equal(new WrappedPerson('alonzo'))
   })
 
   it('should throw when func is a class but new is not used', function () {
+    ;(() => Person('haskell')).should.throw(TypeError)
     const WrappedPerson = wrap(Person).justBecause()
-    assert.throws(() => WrappedPerson('haskell'), TypeError)
+    ;(() => WrappedPerson('curry')).should.throw(TypeError)
   })
 
   it('should work with class inheritance', function () {
@@ -315,8 +314,8 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
       }
     }
     const WrappedFullNamePerson = wrap(FullNamePerson).justBecause()
-    assert.strictEqual(new WrappedFullNamePerson('ada', 'lovelace').name,
-                       new Person('ada lovelace').name)
+    new WrappedFullNamePerson('ada', 'lovelace').name
+      .should.equal(new Person('ada lovelace').name)
   })
 
   it('should preserve class static methods', function () {
@@ -324,7 +323,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
       static sayHi () { return 'hi' }
     }
     const WrappedNiceGuy = wrap(NiceGuy).justBecause()
-    assert.strictEqual(WrappedNiceGuy.sayHi(), 'hi')
+    WrappedNiceGuy.sayHi().should.equal(NiceGuy.sayHi())
   })
 
   it('should preserve Symbol properties of func', function () {
@@ -332,7 +331,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     const symbol = Symbol('shh')
     foo[symbol] = 'top secret'
     const wrapped = wrap(foo).justBecause()
-    assert.strictEqual(wrapped[symbol], foo[symbol])
+    wrapped[symbol].should.equal(foo[symbol])
   })
 
   it('should work with generator functions', function () {
@@ -340,26 +339,23 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     function * range (start, end) {
       while (start < end) yield start++
     }
-    let sum = 0
     const wrappedRange = wrap(range).justBecause()
+    let sum = 0
     for (const i of wrappedRange(1, 4)) sum += i
-    assert.strictEqual(sum, 6)
+    sum.should.equal(6)
   })
 
   it('should preserve non-constructibility', function () {
     // since ES7 generators are not constructible
     function * gen () { }
-    const Wrapped = wrap(gen).justBecause()
-    assert(() => new Wrapped(), TypeError)
+    const WrappedGenerator = wrap(gen).justBecause()
+    ;(() => new WrappedGenerator()).should.throw(TypeError)
   })
 
   it('should preserve new.target', function () {
-    function someConstructor () { }
-    const WrappedArray = wrap(Array).justBecause()
-    // use the given constructor but inherit from (Wrapped)Array
-    const object = Reflect.construct(WrappedArray, [], someConstructor)
-    assert.strictEqual(Object.getPrototypeOf(object),
-                       someConstructor.prototype)
-    assert(Array.isArray(object))
+    function GimmeNewTarget () { return new.target }
+    function MyConstructor () { }
+    const Wrapped = wrap(GimmeNewTarget).justBecause()
+    Reflect.construct(Wrapped, [], MyConstructor).should.equal(MyConstructor)
   })
 })
