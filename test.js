@@ -264,39 +264,38 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   })
 
   it('should work with getters', function () {
-    const idiot = { get name () { return 'luca' } }
-    const descriptor = Object.getOwnPropertyDescriptor(idiot, 'name')
-    descriptor.get = wrap(descriptor.get).justBecause()
-    assert.strictEqual(idiot.name, 'luca')
+    function idiot () { }
+    Object.defineProperty(idiot, 'name', { get: () => 'luca' })
+    wrap(idiot).justBecause().name.should.equal(idiot.name)
   })
 
   it('should work with setters', function () {
-    const idiot = {
-      set name (name) { this._name = name },
-      get name () { return this._name }
-    }
-    const descriptor = Object.getOwnPropertyDescriptor(idiot, 'name')
-    descriptor.set = wrap(descriptor.set).justBecause()
-    idiot.name = 'luca'
-    assert.strictEqual(idiot._name, 'luca')
+    function idiot () { }
+    Object.defineProperty(idiot, 'name', {
+      get: function () { return this._name },
+      set: function (name) { return (this._name = name) }
+    })
+    const wrapped = wrap(idiot).justBecause()
+    wrapped.name = 'Forrest'
+    ;(wrapped.name).should.equal('Forrest')
   })
 
   it('should work with arrow functions', function () {
     const double = n => n * 2
     const wrapped = wrap(double).justBecause()
-    assert.strictEqual(wrapped(42), 84)
+    wrapped(42).should.equal(84)
   })
 
   it('should throw when using arrows as constructors', function () {
     const Wrapped = wrap(() => { }).justBecause()
-    assert.throws(() => new Wrapped(), TypeError)
+    ;(() => new Wrapped()).should.throw(TypeError)
   })
 
-  it('should preserve default parameter values', function () {
+  it('should work with default parameter values', function () {
     function argOr42 (arg = 42) { return arg }
     const wrapped = wrap(argOr42).justBecause()
-    assert.strictEqual(wrapped(), 42)
-    assert.strictEqual(wrapped(7), 7)
+    wrapped().should.equal(42)
+    wrapped(7).should.equal(7)
   })
 
   it('should preserve rest parameters', function () {
