@@ -298,13 +298,6 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     wrapped(7).should.equal(7)
   })
 
-  it('should preserve rest parameters', function () {
-    const args = [1, 2, 3]
-    function gimmeRestArgs (...a) { return a }
-    const wrapped = wrap(gimmeRestArgs).justBecause()
-    assert.deepStrictEqual(wrapped(...args), args)
-  })
-
   it('should work when func is a class (constructor)', function () {
     const WrappedPerson = wrap(Person).justBecause()
     assert.deepStrictEqual(new Person('alonzo'), new WrappedPerson('alonzo'))
