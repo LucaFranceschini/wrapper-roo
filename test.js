@@ -10,6 +10,21 @@ const should = chai.should()  // use should-style assertions
 chai.use(dirtyChai)  // lint-friendly assertions
 chai.use(sinonChai)  // Sinon mocking framework
 
+// ad-hoc assertion to check prototypes
+chai.use(function (_chai, utils) {
+  _chai.Assertion.addMethod('prototype', function (expected) {
+    const found = Object.getPrototypeOf(this._obj)
+
+    this.assert(
+      found === expected,
+      'expected #{this} to have prototype #{exp} but got #{act}',
+      'expected #{this} to not have prototype #{act}',
+      expected,
+      found
+    )
+  })
+})
+
 // arrows are discouraged within Mocha, use regular functions
 describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   // helpers and utils
@@ -147,7 +162,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   it('should preserve prototype link in constructor calls', function () {
     const Wrapped = justWrap(Box)
     const box = new Wrapped(42)
-    Object.getPrototypeOf(box).should.equal(Box.prototype)
+    box.should.have.prototype(Box.prototype)
   })
 
   it('should preserve call() explicit binding', function () {
@@ -185,15 +200,13 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     Bound.prototype.should.not.equal(Foo.prototype)
 
     // new objects should get the original prototype, not the bound one
-    let prototype = Object.getPrototypeOf(new Bound())
-    prototype.should.equal(Foo.prototype)
-    prototype.should.not.equal(Bound.prototype)
+    new Bound().should.have.prototype(Foo.prototype)
+    new Bound().should.not.have.prototype(Bound.prototype)
 
     // and the same happens with the wrapper
     const Wrapped = justWrap(Bound)
-    prototype = Object.getPrototypeOf(new Wrapped())
-    prototype.should.equal(Foo.prototype)
-    prototype.should.not.equal(Bound.prototype)
+    new Wrapped().should.have.prototype(Foo.prototype)
+    new Wrapped().should.not.have.prototype(Bound.prototype)
   })
 
   it('should allow partial application with Function.bind', function () {
@@ -233,11 +246,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     // (otherwise all functions use the same one)
     function foo () { }
     Object.setPrototypeOf(foo, { })
-
-    const wrapped = justWrap(foo)
-    const originalProto = Object.getPrototypeOf(foo)
-    const wrappedProto = Object.getPrototypeOf(wrapped)
-    wrappedProto.should.equal(originalProto)
+    justWrap(foo).should.have.prototype(Object.getPrototypeOf(foo))
   })
 
   /* The following tests only look at own properties because inherited ones are
