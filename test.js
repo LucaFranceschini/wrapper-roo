@@ -17,6 +17,7 @@ chai.use(function (_chai, utils) {
 
     this.assert(
       found === expected,
+      // normal and negated assertion message, respectively
       'expected #{this} to have prototype #{exp} but got #{act}',
       'expected #{this} to not have prototype #{act}',
       expected,
