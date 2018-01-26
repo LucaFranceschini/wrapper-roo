@@ -50,6 +50,10 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     (() => wrap(nop).withPreHook('hey')).should.throw(TypeError)
   })
 
+  it('should throw if postHook is not a function', function () {
+    (() => wrap(nop).withPostHook('ho')).should.throw(TypeError)
+  })
+
   it('should propagate the error if preHook throws', function () {
     wrap(nop).withPreHook(throw42).should.throw(/42/)
   })
@@ -58,10 +62,6 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     const wrapped = wrap(nop).withPreHook(spy)
     wrapped()
     spy.should.have.been.calledOnce()
-  })
-
-  it('should throw if postHook is not a function', function () {
-    (() => wrap(nop).withPostHook('ho')).should.throw(TypeError)
   })
 
   it('should propagate the error if postHook throws', function () {
@@ -107,18 +107,18 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     postSpy.should.have.been.calledImmediatelyAfter(spy)
   })
 
+  it('should invoke func exactly once', function () {
+    const wrapped = justWrap(spy)
+    wrapped()
+    spy.should.have.been.calledOnce()
+  })
+
   it('should return a function', function () {
     justWrap(nop).should.be.a('function')
   })
 
   it('should return a different function', function () {
     justWrap(nop).should.not.equal(nop)
-  })
-
-  it('should invoke func exactly once', function () {
-    const wrapped = justWrap(spy)
-    wrapped()
-    spy.should.have.been.calledOnce()
   })
 
   it('should forward arguments', function () {
