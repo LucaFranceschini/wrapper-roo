@@ -13,15 +13,15 @@ chai.use(sinonChai)  // Sinon mocking framework
 // arrows are discouraged within Mocha, use regular functions
 describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   // helpers and utils
+
   function nop () { }
-  function throwError () { throw new Error() }
   function throw42 () { throw new Error(42) }
   function Box (value) { this.value = value }
-  function justWrap(f) { return wrap(f).justBecause() }
+  function justWrap (f) { return wrap(f).justBecause() }
+  function gimmeThis () { return this }
+
   const spy = sinon.spy()
 
-  function gimme42 () { return 42 }
-  function gimmeThis () { return this }
   class Person {
     constructor (name) {
       this.name = name
@@ -56,6 +56,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   })
 
   it('should throw postHook error even if func throws', function () {
+    function throwError () { throw new Error() }
     wrap(throwError).withPostHook(throw42).should.throw(/42/)
   })
 
@@ -115,7 +116,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   })
 
   it('should forward return value', function () {
-    const wrapped = justWrap(gimme42)
+    const wrapped = justWrap(() => 42)
     wrapped().should.equal(42)
   })
 
