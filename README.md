@@ -93,7 +93,7 @@ Basically, if it is a function then it will be correctly wrapped.
 ### Tools
 *Continuous integration*: [Travis](https://travis-ci.org/)
 
-*Testing*: [Mocha](https://mochajs.org/)
+*Testing*: [Mocha](https://mochajs.org/) + [Chai](http://chaijs.com/) + [Sinon.js](http://sinonjs.org/)
 
 *Coverage*: [Istanbul](https://istanbul.js.org/) + [Coveralls](https://coveralls.io/)
 
