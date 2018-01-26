@@ -17,6 +17,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   function throwError () { throw new Error() }
   function throw42 () { throw new Error(42) }
   function Box (value) { this.value = value }
+  function justWrap(f) { return wrap(f).justBecause() }
   const spy = sinon.spy()
 
   function gimme42 () { return 42 }
@@ -93,38 +94,38 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   })
 
   it('should return a function', function () {
-    wrap(nop).justBecause().should.be.a('function')
+    justWrap(nop).should.be.a('function')
   })
 
   it('should return a different function', function () {
-    wrap(nop).justBecause().should.not.equal(nop)
+    justWrap(nop).should.not.equal(nop)
   })
 
   it('should invoke func exactly once', function () {
-    const wrapped = wrap(spy).justBecause()
+    const wrapped = justWrap(spy)
     wrapped()
     spy.should.have.been.calledOnce()
   })
 
   it('should forward arguments', function () {
     const args = [1, 2, 3]
-    const wrapped = wrap(spy).justBecause()
+    const wrapped = justWrap(spy)
     wrapped(...args)
     spy.should.always.have.been.calledWithExactly(...args)
   })
 
   it('should forward return value', function () {
-    const wrapped = wrap(gimme42).justBecause()
+    const wrapped = justWrap(gimme42)
     wrapped().should.equal(42)
   })
 
   it('should re-throw the same error', function () {
-    wrap(throw42).justBecause().should.throw(/42/)
+    justWrap(throw42).should.throw(/42/)
   })
 
   // default `this` binding is `undefined` in strict mode for non-arrows
   it('should preserve default this binding (undefined)', function () {
-    const wrapped = wrap(gimmeThis).justBecause()
+    const wrapped = justWrap(gimmeThis)
     should.equal(wrapped(), gimmeThis())
   })
 
@@ -133,23 +134,23 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     // it is cyclic so not printable in case of errors
     const obj = { }
     const bound = gimmeThis.bind(obj)
-    const wrapped = wrap(bound).justBecause()
+    const wrapped = justWrap(bound)
     wrapped().should.equal(obj)
   })
 
   it('should not change constructed objects', function () {
-    const Wrapped = wrap(Box).justBecause()
+    const Wrapped = justWrap(Box)
     new Wrapped(42).should.deep.equal(new Box(42))
   })
 
   it('should preserve prototype link in constructor calls', function () {
-    const Wrapped = wrap(Box).justBecause()
+    const Wrapped = justWrap(Box)
     const box = new Wrapped(42)
     Object.getPrototypeOf(box).should.equal(Box.prototype)
   })
 
   it('should preserve call() explicit binding', function () {
-    const wrapped = wrap(gimmeThis).justBecause()
+    const wrapped = justWrap(gimmeThis)
     const obj = { }
     wrapped.call(obj).should.equal(gimmeThis.call(obj))
   })
@@ -158,7 +159,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   // however some functions don't, like bound functions
   it('should not introduce prototype property', function () {
     const bound = nop.bind(null)  // bind 'this' to null, don't care
-    const wrapped = wrap(bound).justBecause()
+    const wrapped = justWrap(bound)
     bound.should.not.have.own.property('prototype')
     wrapped.should.not.have.property('prototype')  // not even inherited
   })
@@ -188,7 +189,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     prototype.should.not.equal(Bound.prototype)
 
     // and the same happens with the wrapper
-    const Wrapped = wrap(Bound).justBecause()
+    const Wrapped = justWrap(Bound)
     prototype = Object.getPrototypeOf(new Wrapped())
     prototype.should.equal(Foo.prototype)
     prototype.should.not.equal(Bound.prototype)
@@ -205,8 +206,8 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     const Pair42 = Pair.bind(null, 42)
 
     // wrap both
-    const WrappedPair = wrap(Pair).justBecause()
-    const WrappedPair42 = wrap(Pair42).justBecause()
+    const WrappedPair = justWrap(Pair)
+    const WrappedPair42 = justWrap(Pair42)
 
     new Pair(42, 'foo').should.deep.equal(new Pair42('foo'))
     new WrappedPair(42, 'foo').should.deep.equal(new WrappedPair42('foo'))
@@ -214,16 +215,16 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   })
 
   it('should preserve function name', function () {
-    wrap(nop).justBecause().name.should.equal(nop.name)
+    justWrap(nop).name.should.equal(nop.name)
   })
 
   it('should preserve number of expected arguments', function () {
     // wrap a function with a number of arguments > 0 not to involve defaults
-    wrap(Box).justBecause().length.should.equal(Box.length)
+    justWrap(Box).length.should.equal(Box.length)
   })
 
   it('should preserve prototype property', function () {
-    wrap(Box).justBecause().prototype.should.equal(Box.prototype)
+    justWrap(Box).prototype.should.equal(Box.prototype)
   })
 
   it('should preserve the internal prototype', function () {
@@ -232,7 +233,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     function foo () { }
     Object.setPrototypeOf(foo, { })
 
-    const wrapped = wrap(foo).justBecause()
+    const wrapped = justWrap(foo)
     const originalProto = Object.getPrototypeOf(foo)
     const wrappedProto = Object.getPrototypeOf(wrapped)
     wrappedProto.should.equal(originalProto)
@@ -252,7 +253,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
       writable: true
     }
     Object.defineProperty(foo, 'bar', descriptor)
-    wrap(foo).justBecause().should.have.ownPropertyDescriptor('bar', descriptor)
+    justWrap(foo).should.have.ownPropertyDescriptor('bar', descriptor)
   })
 
   it('should preserve prototype descriptors list', function () {
@@ -264,7 +265,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   it('should work with getters', function () {
     function idiot () { }
     Object.defineProperty(idiot, 'name', { get: () => 'luca' })
-    wrap(idiot).justBecause().name.should.equal(idiot.name)
+    justWrap(idiot).name.should.equal(idiot.name)
   })
 
   it('should work with setters', function () {
@@ -273,37 +274,37 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
       get: function () { return this._name },
       set: function (name) { return (this._name = name) }
     })
-    const wrapped = wrap(idiot).justBecause()
+    const wrapped = justWrap(idiot)
     wrapped.name = 'forrest'
     ;(wrapped.name).should.equal('forrest')
   })
 
   it('should work with arrow functions', function () {
     const double = n => n * 2
-    const wrapped = wrap(double).justBecause()
+    const wrapped = justWrap(double)
     wrapped(42).should.equal(84)
   })
 
   it('should throw when using arrows as constructors', function () {
-    const Wrapped = wrap(() => { }).justBecause()
+    const Wrapped = justWrap(() => { })
     ;(() => new Wrapped()).should.throw(TypeError)
   })
 
   it('should work with default parameter values', function () {
     function argOr42 (arg = 42) { return arg }
-    const wrapped = wrap(argOr42).justBecause()
+    const wrapped = justWrap(argOr42)
     wrapped().should.equal(42)
     wrapped(7).should.equal(7)
   })
 
   it('should work when func is a class (constructor)', function () {
-    const WrappedPerson = wrap(Person).justBecause()
+    const WrappedPerson = justWrap(Person)
     new Person('alonzo').should.be.deep.equal(new WrappedPerson('alonzo'))
   })
 
   it('should throw when func is a class but new is not used', function () {
     ;(() => Person('haskell')).should.throw(TypeError)
-    const WrappedPerson = wrap(Person).justBecause()
+    const WrappedPerson = justWrap(Person)
     ;(() => WrappedPerson('curry')).should.throw(TypeError)
   })
 
@@ -313,7 +314,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
         super(firstName + ' ' + lastName)
       }
     }
-    const WrappedFullNamePerson = wrap(FullNamePerson).justBecause()
+    const WrappedFullNamePerson = justWrap(FullNamePerson)
     new WrappedFullNamePerson('ada', 'lovelace').name
       .should.equal(new Person('ada lovelace').name)
   })
@@ -322,7 +323,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     class NiceGuy {
       static sayHi () { return 'hi' }
     }
-    const WrappedNiceGuy = wrap(NiceGuy).justBecause()
+    const WrappedNiceGuy = justWrap(NiceGuy)
     WrappedNiceGuy.sayHi().should.equal(NiceGuy.sayHi())
   })
 
@@ -330,7 +331,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     function foo () { }
     const symbol = Symbol('shh')
     foo[symbol] = 'top secret'
-    const wrapped = wrap(foo).justBecause()
+    const wrapped = justWrap(foo)
     wrapped[symbol].should.equal(foo[symbol])
   })
 
@@ -339,7 +340,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     function * range (start, end) {
       while (start < end) yield start++
     }
-    const wrappedRange = wrap(range).justBecause()
+    const wrappedRange = justWrap(range)
     let sum = 0
     for (const i of wrappedRange(1, 4)) sum += i
     sum.should.equal(6)
@@ -348,14 +349,14 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   it('should preserve non-constructibility', function () {
     // since ES7 generators are not constructible
     function * gen () { }
-    const WrappedGenerator = wrap(gen).justBecause()
+    const WrappedGenerator = justWrap(gen)
     ;(() => new WrappedGenerator()).should.throw(TypeError)
   })
 
   it('should preserve new.target', function () {
     function GimmeNewTarget () { return new.target }
     function MyConstructor () { }
-    const Wrapped = wrap(GimmeNewTarget).justBecause()
+    const Wrapped = justWrap(GimmeNewTarget)
     Reflect.construct(Wrapped, [], MyConstructor).should.equal(MyConstructor)
   })
 })
