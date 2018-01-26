@@ -44,10 +44,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     }
   }
 
-  // make the spy reusable
-  beforeEach(function () {
-    spy.resetHistory()
-  })
+  beforeEach('make the spy reusable', () => spy.resetHistory())
 
   it('should throw if preHook is not a function', function () {
     (() => wrap(nop).withPreHook('hey')).should.throw(TypeError)
