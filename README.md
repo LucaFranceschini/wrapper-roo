@@ -1,7 +1,7 @@
 # wrapper-roo
 ![Ripper Roo](./ripper-roo.png)
 
-[![Travis build status](https://img.shields.io/travis/LucaFranceschini/wrapper-roo.svg)](https://travis-ci.org/LucaFranceschini/wrapper-roo.svg)
+[![Travis build status](https://api.travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
 [![Coverage Status](https://img.shields.io/coveralls/LucaFranceschini/wrapper-roo.svg)](https://coveralls.io/github/LucaFranceschini/wrapper-roo)
 [![Greenkeeper badge](https://badges.greenkeeper.io/LucaFranceschini/wrapper-roo.svg)](https://greenkeeper.io/)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
