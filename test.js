@@ -367,4 +367,11 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     const Wrapped = justWrap(GimmeNewTarget)
     Reflect.construct(Wrapped, [], MyConstructor).should.equal(MyConstructor)
   })
+
+  it('should be bindable after wrapping', function () {
+    // exploit both 'this' binding and (partial) argument binding
+    function thisPlusArgs (a, b) { return this + a + b }
+    thisPlusArgs.bind(3, 2)(1).should.equal(6)
+    justWrap(thisPlusArgs).bind(3, 2)(1).should.equal(6)
+  })
 })
