@@ -354,8 +354,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     sum.should.equal(6)
   })
 
-  it('should preserve non-constructibility', function () {
-    // since ES7 generators are not constructible
+  it('should preserve non-constructibility of generators (ES7)', function () {
     function * gen () { }
     const WrappedGenerator = justWrap(gen)
     ;(() => new WrappedGenerator()).should.throw(TypeError)
