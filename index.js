@@ -35,7 +35,11 @@ function wrapPrePostHooks (func, preHook, postHook) {
   handler.apply = (target, thisArg, argumentsList) => {
     preHook()
     try {
-      return target.apply(thisArg, argumentsList)
+      // ideally we would this:
+      // return target.apply(thisArg, argumentsList)
+      // but... https://github.com/LucaFranceschini/wrapper-roo/issues/26
+      // better to invoke the original apply, it cannot be redefined
+      return Function.prototype.apply.call(target, thisArg, argumentsList)
     } finally {
       postHook()
     }

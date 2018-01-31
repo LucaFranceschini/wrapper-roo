@@ -372,4 +372,33 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     thisPlusArgs.bind(3, 2)(1).should.equal(6)
     wrap.it(thisPlusArgs).bind(3, 2)(1).should.equal(6)
   })
+
+  // foo.apply could be redefined to do something different from function call
+  // https://github.com/LucaFranceschini/wrapper-roo/issues/26
+  it('should not invoke an overridden apply()', function () {
+    function foo () { }
+    foo.apply = () => { throw new Error() }
+    foo.should.not.throw(Error)
+    foo.apply.should.throw(Error)
+    wrap.it(foo).should.not.throw(Error)
+  })
+
+  // foo.call could be redefined to do something different from function call
+  it('should not invoke an overridden call()', function () {
+    function foo () { }
+    foo.call = () => { throw new Error() }
+    foo.should.not.throw(Error)
+    foo.call.should.throw(Error)
+    wrap.it(foo).should.not.throw(Error)
+  })
+
+  // foo.bind could be redefined to do something different from function call
+  // old implementation used bind
+  it('should not invoke an overridden bind()', function () {
+    function foo () { }
+    foo.bind = () => { throw new Error() }
+    foo.should.not.throw(Error)
+    foo.bind.should.throw(Error)
+    wrap.it(foo).should.not.throw(Error)
+  })
 })
