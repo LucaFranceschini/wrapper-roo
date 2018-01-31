@@ -14,7 +14,7 @@ function wrap (func) {
 }
 
 // both hooks do nothing, mostly useful for testing purposes
-wrap.it = func => wrapPrePostHooks(func, nop, nop)
+wrap.the = func => wrapPrePostHooks(func, nop, nop)
 
 // default hook, do nothing
 function nop () { }

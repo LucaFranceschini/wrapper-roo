@@ -107,38 +107,38 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   })
 
   it('should invoke func exactly once', function () {
-    const wrapped = wrap.it(spy)
+    const wrapped = wrap.the(spy)
     wrapped()
     spy.should.have.been.calledOnce()
   })
 
   it('should return a function', function () {
-    wrap.it(nop).should.be.a('function')
+    wrap.the(nop).should.be.a('function')
   })
 
   it('should return a different function', function () {
-    wrap.it(nop).should.not.equal(nop)
+    wrap.the(nop).should.not.equal(nop)
   })
 
   it('should forward arguments', function () {
     const args = [1, 2, 3]
-    const wrapped = wrap.it(spy)
+    const wrapped = wrap.the(spy)
     wrapped(...args)
     spy.should.always.have.been.calledWithExactly(...args)
   })
 
   it('should forward return value', function () {
-    const wrapped = wrap.it(() => 42)
+    const wrapped = wrap.the(() => 42)
     wrapped().should.equal(42)
   })
 
   it('should re-throw the same error', function () {
-    wrap.it(throw42).should.throw(/42/)
+    wrap.the(throw42).should.throw(/42/)
   })
 
   // default `this` binding is `undefined` in strict mode for non-arrows
   it('should preserve default this binding (undefined)', function () {
-    const wrapped = wrap.it(gimmeThis)
+    const wrapped = wrap.the(gimmeThis)
     should.equal(wrapped(), gimmeThis())
   })
 
@@ -147,23 +147,23 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     // it is cyclic so not printable in case of errors
     const obj = { }
     const bound = gimmeThis.bind(obj)
-    const wrapped = wrap.it(bound)
+    const wrapped = wrap.the(bound)
     wrapped().should.equal(obj)
   })
 
   it('should not change constructed objects', function () {
-    const Wrapped = wrap.it(Box)
+    const Wrapped = wrap.the(Box)
     new Wrapped(42).should.deep.equal(new Box(42))
   })
 
   it('should preserve prototype link in constructor calls', function () {
-    const Wrapped = wrap.it(Box)
+    const Wrapped = wrap.the(Box)
     const box = new Wrapped(42)
     box.should.have.prototype(Box.prototype)
   })
 
   it('should preserve call() explicit binding', function () {
-    const wrapped = wrap.it(gimmeThis)
+    const wrapped = wrap.the(gimmeThis)
     const obj = { }
     wrapped.call(obj).should.equal(gimmeThis.call(obj))
   })
@@ -172,7 +172,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   // however some functions don't, like bound functions
   it('should not introduce prototype property', function () {
     const bound = nop.bind(null)  // bind 'this' to null, don't care
-    const wrapped = wrap.it(bound)
+    const wrapped = wrap.the(bound)
     bound.should.not.have.own.property('prototype')
     wrapped.should.not.have.property('prototype')  // not even inherited
   })
@@ -201,7 +201,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     new Bound().should.not.have.prototype(Bound.prototype)
 
     // and the same happens with the wrapper
-    const Wrapped = wrap.it(Bound)
+    const Wrapped = wrap.the(Bound)
     new Wrapped().should.have.prototype(Foo.prototype)
     new Wrapped().should.not.have.prototype(Bound.prototype)
   })
@@ -217,8 +217,8 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     const Pair42 = Pair.bind(null, 42)
 
     // wrap both
-    const WrappedPair = wrap.it(Pair)
-    const WrappedPair42 = wrap.it(Pair42)
+    const WrappedPair = wrap.the(Pair)
+    const WrappedPair42 = wrap.the(Pair42)
 
     new Pair(42, 'foo').should.deep.equal(new Pair42('foo'))
     new WrappedPair(42, 'foo').should.deep.equal(new WrappedPair42('foo'))
@@ -226,16 +226,16 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
   })
 
   it('should preserve function name', function () {
-    wrap.it(nop).name.should.equal(nop.name)
+    wrap.the(nop).name.should.equal(nop.name)
   })
 
   it('should preserve number of expected arguments', function () {
     // wrap a function with a number of arguments > 0 not to involve defaults
-    wrap.it(Box).length.should.equal(Box.length)
+    wrap.the(Box).length.should.equal(Box.length)
   })
 
   it('should preserve prototype property', function () {
-    wrap.it(Box).prototype.should.equal(Box.prototype)
+    wrap.the(Box).prototype.should.equal(Box.prototype)
   })
 
   it('should preserve the internal prototype', function () {
@@ -243,7 +243,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     // (otherwise all functions use the same one)
     function foo () { }
     Object.setPrototypeOf(foo, { })
-    wrap.it(foo).should.have.prototype(Object.getPrototypeOf(foo))
+    wrap.the(foo).should.have.prototype(Object.getPrototypeOf(foo))
   })
 
   /* The following tests only look at own properties because inherited ones are
@@ -260,19 +260,19 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
       writable: true
     }
     Object.defineProperty(foo, 'bar', descriptor)
-    wrap.it(foo).should.have.ownPropertyDescriptor('bar', descriptor)
+    wrap.the(foo).should.have.ownPropertyDescriptor('bar', descriptor)
   })
 
   it('should preserve prototype descriptors list', function () {
     const originalDescriptors = Object.getOwnPropertyDescriptors(nop)
-    const wrappedDescriptors = Object.getOwnPropertyDescriptors(wrap.it(nop))
+    const wrappedDescriptors = Object.getOwnPropertyDescriptors(wrap.the(nop))
     wrappedDescriptors.should.deep.equal(originalDescriptors)
   })
 
   it('should work with getters', function () {
     function idiot () { }
     Object.defineProperty(idiot, 'name', { get: () => 'luca' })
-    wrap.it(idiot).name.should.equal(idiot.name)
+    wrap.the(idiot).name.should.equal(idiot.name)
   })
 
   it('should work with setters', function () {
@@ -281,37 +281,37 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
       get: function () { return this._name },
       set: function (name) { return (this._name = name) }
     })
-    const wrapped = wrap.it(idiot)
+    const wrapped = wrap.the(idiot)
     wrapped.name = 'forrest'
     ;(wrapped.name).should.equal('forrest')
   })
 
   it('should work with arrow functions', function () {
     const double = n => n * 2
-    const wrapped = wrap.it(double)
+    const wrapped = wrap.the(double)
     wrapped(42).should.equal(84)
   })
 
   it('should throw when using arrows as constructors', function () {
-    const Wrapped = wrap.it(() => { })
+    const Wrapped = wrap.the(() => { })
     ;(() => new Wrapped()).should.throw(TypeError)
   })
 
   it('should work with default parameter values', function () {
     function argOr42 (arg = 42) { return arg }
-    const wrapped = wrap.it(argOr42)
+    const wrapped = wrap.the(argOr42)
     wrapped().should.equal(42)
     wrapped(7).should.equal(7)
   })
 
   it('should work when func is a class (constructor)', function () {
-    const WrappedPerson = wrap.it(Person)
+    const WrappedPerson = wrap.the(Person)
     new Person('alonzo').should.be.deep.equal(new WrappedPerson('alonzo'))
   })
 
   it('should throw when func is a class but new is not used', function () {
     ;(() => Person('haskell')).should.throw(TypeError)
-    const WrappedPerson = wrap.it(Person)
+    const WrappedPerson = wrap.the(Person)
     ;(() => WrappedPerson('curry')).should.throw(TypeError)
   })
 
@@ -321,7 +321,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
         super(firstName + ' ' + lastName)
       }
     }
-    const WrappedFullNamePerson = wrap.it(FullNamePerson)
+    const WrappedFullNamePerson = wrap.the(FullNamePerson)
     new WrappedFullNamePerson('ada', 'lovelace').name
       .should.equal(new Person('ada lovelace').name)
   })
@@ -330,7 +330,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     class NiceGuy {
       static sayHi () { return 'hi' }
     }
-    const WrappedNiceGuy = wrap.it(NiceGuy)
+    const WrappedNiceGuy = wrap.the(NiceGuy)
     WrappedNiceGuy.sayHi().should.equal(NiceGuy.sayHi())
   })
 
@@ -338,7 +338,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     function foo () { }
     const symbol = Symbol('shh')
     foo[symbol] = 'top secret'
-    const wrapped = wrap.it(foo)
+    const wrapped = wrap.the(foo)
     wrapped[symbol].should.equal(foo[symbol])
   })
 
@@ -347,7 +347,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     function * range (start, end) {
       while (start < end) yield start++
     }
-    const wrappedRange = wrap.it(range)
+    const wrappedRange = wrap.the(range)
     let sum = 0
     for (const i of wrappedRange(1, 4)) sum += i
     sum.should.equal(6)
@@ -355,14 +355,14 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
 
   it('should preserve non-constructibility of generators (ES7)', function () {
     function * gen () { }
-    const WrappedGenerator = wrap.it(gen)
+    const WrappedGenerator = wrap.the(gen)
     ;(() => new WrappedGenerator()).should.throw(TypeError)
   })
 
   it('should preserve new.target', function () {
     function GimmeNewTarget () { return new.target }
     function MyConstructor () { }
-    const Wrapped = wrap.it(GimmeNewTarget)
+    const Wrapped = wrap.the(GimmeNewTarget)
     Reflect.construct(Wrapped, [], MyConstructor).should.equal(MyConstructor)
   })
 
@@ -370,7 +370,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     // exploit both 'this' binding and (partial) argument binding
     function thisPlusArgs (a, b) { return this + a + b }
     thisPlusArgs.bind(3, 2)(1).should.equal(6)
-    wrap.it(thisPlusArgs).bind(3, 2)(1).should.equal(6)
+    wrap.the(thisPlusArgs).bind(3, 2)(1).should.equal(6)
   })
 
   // foo.apply could be redefined to do something different from function call
@@ -380,7 +380,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     foo.apply = () => { throw new Error() }
     foo.should.not.throw(Error)
     foo.apply.should.throw(Error)
-    wrap.it(foo).should.not.throw(Error)
+    wrap.the(foo).should.not.throw(Error)
   })
 
   // foo.call could be redefined to do something different from function call
@@ -389,7 +389,7 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     foo.call = () => { throw new Error() }
     foo.should.not.throw(Error)
     foo.call.should.throw(Error)
-    wrap.it(foo).should.not.throw(Error)
+    wrap.the(foo).should.not.throw(Error)
   })
 
   // foo.bind could be redefined to do something different from function call
@@ -399,6 +399,6 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     foo.bind = () => { throw new Error() }
     foo.should.not.throw(Error)
     foo.bind.should.throw(Error)
-    wrap.it(foo).should.not.throw(Error)
+    wrap.the(foo).should.not.throw(Error)
   })
 })
