@@ -2,13 +2,19 @@
 
 // fluent API, consider wrap = require('wrapper-roo')
 // don't put logic here
-module.exports = func => ({  // parens needed not to parse it like an object
-  withPreHook: pre => wrapPrePostHooks(func, pre, nop),
-  withPostHook: post => wrapPrePostHooks(func, nop, post),
-  withPrePostHooks: (pre, post) => wrapPrePostHooks(func, pre, post),
-  // mostly useful for testing purposes, both hooks do nothing
-  justBecause: () => wrapPrePostHooks(func, nop, nop)
-})
+
+module.exports = wrap
+
+function wrap (func) {
+  return {
+    withPreHook: pre => wrapPrePostHooks(func, pre, nop),
+    withPostHook: post => wrapPrePostHooks(func, nop, post),
+    withPrePostHooks: (pre, post) => wrapPrePostHooks(func, pre, post)
+  }
+}
+
+// both hooks do nothing, mostly useful for testing purposes
+wrap.it = func => wrapPrePostHooks(func, nop, nop)
 
 // default hook, do nothing
 function nop () { }
