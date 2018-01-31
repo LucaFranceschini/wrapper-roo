@@ -65,7 +65,7 @@ This (pun intended) means it also works with getters and setters, as well as `Fu
 ```js
 function Idiot(name) { this.name = name }
 // default empty hooks
-const WrappedIdiot = wrap.it(Idiot)
+const WrappedIdiot = wrap.the(Idiot)
 console.log(new WrappedIdiot('luca'))
 ```
 ```
@@ -76,7 +76,7 @@ In case you're object-oriented, the wrapper correctly handles prototypes so inhe
 ### Function Properties Are Preserved
 ```js
 function foo() { }
-const wrapped = wrap.it(foo)
+const wrapped = wrap.the(foo)
 console.log(foo.name === wrapped.name)  // 'foo'
 ```
 ```
