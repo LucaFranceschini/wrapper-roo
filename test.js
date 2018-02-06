@@ -401,4 +401,17 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     foo.bind.should.throw(Error)
     wrap.the(foo).should.not.throw(Error)
   })
+
+  // Reflect.apply could be redefined to do something different from function call
+  it('should not invoke an overridden Reflect.apply()', function () {
+    // restore it after the test!
+    const originalApply = Reflect.apply
+
+    Reflect.apply = () => { throw new Error() }
+    // every use of Reflect.apply will now throw
+    ;(() => Reflect.apply(nop)).should.throw(Error)
+    wrap.the(nop).should.not.throw(Error)
+
+    Reflect.apply = originalApply
+  })
 })
