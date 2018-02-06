@@ -401,4 +401,9 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
     foo.bind.should.throw(Error)
     wrap.the(foo).should.not.throw(Error)
   })
+
+  it.skip('should invoke the custom hook', function () {
+    wrap(nop).with(spy)()
+    spy.should.have.been.calledOnce()
+  })
 })
