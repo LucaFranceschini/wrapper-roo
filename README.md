@@ -99,7 +99,7 @@ The same holds for other *standard* function properties, like arity (`length`) o
 If some properties were added to the function object (*eeeew...*), they are copied as well.
 Also, property descriptors are preserved.
 
-### ESMAScript 6+ supported
+### ECMAScript 6+ supported
 The wrapper also works with arrows, classes, generators, and `async`/`await`.
 Basically, if it is a function then it will be correctly wrapped.
 
