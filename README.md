@@ -149,20 +149,6 @@ wrap.the(func)  // just wrap it
 
 Other caveats of the current implementation are reported as issues on this repository.
 
-### Circular References
-```js
-function foo () { }
-foo.x = foo
-foo.x === foo  // true
-
-const wrapped = wrap.the(foo)
-wrapped.x === wrapped  // ops, false
-```
-While this is a trivial example, circular reference may appear at any depth. Fixing this is not easy (if possible at all), see [this](https://github.com/LucaFranceschini/wrapper-roo/milestone/1) for a possible solution. Will look into it.
-
-### `toString`
-Currently, `toString` throws on wrapped functions. This is due to `toString` checking whether `this` is bound to a function, but the implementation relies on proxies, which are not functions. A partial workaround could be applied in the future (https://github.com/LucaFranceschini/wrapper-roo/issues/22).
-
 ## Development
 ### Tools
 *Continuous integration*: [Travis](https://travis-ci.org/)
