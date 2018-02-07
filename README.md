@@ -8,9 +8,7 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 A general JavaScript function wrapper that allows to set pre- and post-hooks, while still being as transparent as possible to the rest of the code.
-Available as a npm module.
-
-**Still work in progress**
+Available as npm module.
 
 ## Simplest Example
 ```js
