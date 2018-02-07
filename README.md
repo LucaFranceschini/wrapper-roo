@@ -30,6 +30,15 @@ after
 ```
 Arguments and return value are forwarded, thus the wrapper can be used just like the original function.
 
+## Installation
+```
+npm -i wrapper-roo
+```
+Then in Node.js:
+```js
+const wrap = require('wrapper-roo')
+```
+
 ## Features
 ### Exceptions Support
 Pre- and post-hooks are always invoked, even if the wrapped function throws.
