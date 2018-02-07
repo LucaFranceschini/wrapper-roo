@@ -39,6 +39,7 @@ function wrapPrePostHooks (func, preHook, postHook) {
       // return target.apply(thisArg, argumentsList)
       // but... https://github.com/LucaFranceschini/wrapper-roo/issues/26
       // better to invoke the original apply, it cannot be redefined
+      // (don't use Reflect.apply, it can be redefined as well)
       return Function.prototype.apply.call(target, thisArg, argumentsList)
     } finally {
       postHook()
