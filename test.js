@@ -27,7 +27,7 @@ chai.use(function (_chai, utils) {
 })
 
 // arrows are discouraged within Mocha, use regular functions
-describe('wrapPrePostHooks(func, preHook, postHook)', function () {
+describe('wrapper', function () {
   // helpers and utils
 
   function nop () { }
