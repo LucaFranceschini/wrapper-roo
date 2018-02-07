@@ -7,18 +7,20 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/LucaFranceschini/wrapper-roo.svg)](https://greenkeeper.io/)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-A general JavaScript function wrapper that allows to set pre- and post-hooks, while still being as transparent as possible to the rest of the code.
-Available as a npm module.
+A general JavaScript function wrapper that allows to execute code before and after the function, while still being as transparent as possible to the rest of the code.
+Available as npm module.
 
-**Still work in progress**
-
-## Simplest Example
+## Simple Example
+The following code add two console prints to be executed before and after a wrapped function:
 ```js
 const wrap = require('wrapper-roo')
+
 function hello(name) { console.log('hello ' + name) }
+
 const wrapped = wrap(hello).withPrePostHooks(
   () => console.log('before'),  // pre-hook
   () => console.log('after'))   // post-hook
+
 wrapped('Crash')
 ```
 ```
@@ -29,29 +31,36 @@ after
 Arguments and return value are forwarded, thus the wrapper can be used just like the original function.
 
 ## Features
-### Always Invoke Hooks, No Matter What
-Both hooks are always invoked, even if the wrapped function throws.
+### Exceptions Support
+Pre- and post-hooks are always invoked, even if the wrapped function throws.
 If that is the case, the error is then re-thrown:
 ```js
 const wrapped = wrap(() => {throw 42})
   .withPostHook(() => console.log('yep'))
+
 wrapped()
 ```
 ```
 yep
 Thrown: 42
 ```
-However, if a hook itself throws its error will be thrown, possibly losing the one thrown by the wrapped function, if any.
-If a prehook throws the wrapped function is not invoked at all.
+However, if a hook itself throws its error will be thrown, thus losing the one thrown by the wrapped function, if any.
+If a hook throws before calling the wrapped function, the latter will not be called.
+
+Long story short: do not throw inside hooks.
 
 ### `this` Works
 ```js
 const box = { value: 'yo' }
+
 box.getValue = function () { return this.value }
+
 console.log(box.getValue())
+
 // wrap it (default empty post-hook)
 box.getValue = wrap(box.getValue)
   .withPreHook(() => console.log('hey'))
+
 console.log(box.getValue())
 ```
 ```
@@ -64,8 +73,10 @@ This (pun intended) means it also works with getters and setters, as well as `Fu
 ### `new` Works
 ```js
 function Idiot(name) { this.name = name }
-// default empty hooks
+
+// default empty hook
 const WrappedIdiot = wrap.the(Idiot)
+
 console.log(new WrappedIdiot('luca'))
 ```
 ```
@@ -76,7 +87,9 @@ In case you're object-oriented, the wrapper correctly handles prototypes so inhe
 ### Function Properties Are Preserved
 ```js
 function foo() { }
+
 const wrapped = wrap.the(foo)
+
 console.log(foo.name === wrapped.name)  // 'foo'
 ```
 ```
@@ -86,9 +99,41 @@ The same holds for other *standard* function properties, like arity (`length`) o
 If some properties were added to the function object (*eeeew...*), they are copied as well.
 Also, property descriptors are preserved.
 
-### ESMAScript 6+ supported
+### ECMAScript 6+ supported
 The wrapper also works with arrows, classes, generators, and `async`/`await`.
 Basically, if it is a function then it will be correctly wrapped.
+
+### Custom Hooks
+A *hook* is a higher-order function which takes a function `f` to be executed as an argument and does something before and after running `f`.
+
+It is desirable for the hook to return the result of the wrapped function in order not to lose it.
+
+```js
+function gimme42 () { return 42 }
+
+const wrapped = wrap(gimme42).withHook(f => {
+  const result = f()
+  console.log('Result was ' + result)
+  return result
+})
+
+wrapped()
+```
+```
+Result was 42
+```
+
+## (Fluent) API
+The following functions are exposed:
+```js
+const wrap = require('wrapper-roo')
+
+wrap(func).withPreHook(preHook)
+wrap(func).withPostHook(postHook)
+wrap(func).withPrePostHooks(preHook, postHook)
+wrap(func).withHook(hook)
+wrap.the(func)  // just wrap it
+```
 
 ## Development
 ### Tools

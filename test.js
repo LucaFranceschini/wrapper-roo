@@ -414,4 +414,9 @@ describe('wrapPrePostHooks(func, preHook, postHook)', function () {
 
     Reflect.apply = originalApply
   })
+
+  it('should invoke the custom hook', function () {
+    wrap(nop).withHook(spy)()
+    spy.should.have.been.calledOnce()
+  })
 })
