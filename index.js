@@ -56,8 +56,6 @@ function checkFunction (func, errorMessage) {
   if (typeof func !== 'function') {
     throw new TypeError(errorMessage)
   }
-
-  return func
 }
 
 function buildPrePostHook (preHook, postHook) {
