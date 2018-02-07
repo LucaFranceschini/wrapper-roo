@@ -123,6 +123,18 @@ wrapped()
 Result was 42
 ```
 
+## (Fluent) API
+The following functions are exposed:
+```js
+const wrap = require('wrapper-roo')
+
+wrap(func).withPreHook(preHook)
+wrap(func).withPostHook(postHook)
+wrap(func).withPrePostHooks(preHook, postHook)
+wrap(func).withHook(hook)
+wrap.the(func)  // just wrap it
+```
+
 ## Development
 ### Tools
 *Continuous integration*: [Travis](https://travis-ci.org/)
