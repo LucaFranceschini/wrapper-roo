@@ -32,7 +32,7 @@ Arguments and return value are forwarded, thus the wrapper can be used just like
 
 ## Features
 ### Exceptions Support
-Hooks are always invoked, even after the wrapped function throws.
+Pre- and post-hooks are always invoked, even if the wrapped function throws.
 If that is the case, the error is then re-thrown:
 ```js
 const wrapped = wrap(() => {throw 42})
@@ -44,7 +44,7 @@ wrapped()
 yep
 Thrown: 42
 ```
-However, if a hook itself throws its error will be thrown, possibly losing the one thrown by the wrapped function, if any.
+However, if a hook itself throws its error will be thrown, thus losing the one thrown by the wrapped function, if any.
 If a hook throws before calling the wrapped function, the latter will not be called.
 
 Long story short: do not throw inside hooks.
@@ -102,6 +102,26 @@ Also, property descriptors are preserved.
 ### ECMAScript 6+ supported
 The wrapper also works with arrows, classes, generators, and `async`/`await`.
 Basically, if it is a function then it will be correctly wrapped.
+
+### Custom Hooks
+A *hook* is a higher-order function which takes a function `f` to be executed as an argument and does something before and after running `f`.
+
+It is desirable for the hook to return the result of the wrapped function in order not to lose it.
+
+```js
+function gimme42 () { return 42 }
+
+const wrapped = wrap(gimme42).withHook(f => {
+  const result = f()
+  console.log('Result was ' + result)
+  return result
+})
+
+wrapped()
+```
+```
+Result was 42
+```
 
 ## Development
 ### Tools
