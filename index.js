@@ -7,58 +7,45 @@ module.exports = wrap
 
 function wrap (func) {
   return {
-    withPreHook: pre => wrapPrePostHooks(func, pre, nop),
-    withPostHook: post => wrapPrePostHooks(func, nop, post),
-    withPrePostHooks: (pre, post) => wrapPrePostHooks(func, pre, post)
+    withHook: hook => wrapWithHook(func, hook),
+    withPreHook: pre => wrapWithHook(func, buildPrePostHook(pre, nop)),
+    withPostHook: post => wrapWithHook(func, buildPrePostHook(nop, post)),
+    withPrePostHooks: (pre, post) => wrapWithHook(func, buildPrePostHook(pre, post))
   }
 }
 
-// both hooks do nothing, mostly useful for testing purposes
-wrap.the = func => wrapPrePostHooks(func, nop, nop)
+// just wrap the original function, mostly useful for testing purposes
+wrap.the = func => wrapWithHook(func, f => f())
 
-// default hook, do nothing
+// do nothing
 function nop () { }
 
-// wrap a given function in a new one always invoking pre- and post-hooks
-function wrapPrePostHooks (func, preHook, postHook) {
+// wrap a given function with the given hook wrapper
+function wrapWithHook (func, hook) {
   checkFunction(func, 'The object to be wrapped must be a function')
-  checkFunction(preHook, 'Prehook must be a function')
-  checkFunction(postHook, 'Posthook must be a function')
+  checkFunction(hook, 'The hook must be a function')
 
   // use proxy objects to wrap the function
   const handler = { }
   const proxy = new Proxy(func, handler)
 
-  // both in application and construction we use try-finally to be sure to call
-  // the postHook, even if the function throws
-
   handler.apply = (target, thisArg, argumentsList) => {
-    preHook()
-    try {
-      // ideally we would this:
-      // return target.apply(thisArg, argumentsList)
-      // but... https://github.com/LucaFranceschini/wrapper-roo/issues/26
-      // better to invoke the original apply, it cannot be redefined
-      // (don't use Reflect.apply, it can be redefined as well)
-      return Function.prototype.apply.call(target, thisArg, argumentsList)
-    } finally {
-      postHook()
-    }
+    // ideally we would use this:
+    // target.apply(thisArg, argumentsList)
+    // but... https://github.com/LucaFranceschini/wrapper-roo/issues/26
+    // better to invoke the original apply, it cannot be redefined
+    // (don't use Reflect.apply, it can be redefined as well)
+    return hook(Function.prototype.bind.call(target, thisArg, ...argumentsList))
   }
 
   handler.construct = (target, argumentsList, newTarget) => {
-    preHook()
-    try {
-      // when doing new on the proxy, behave like it was done on the function
-      // https://github.com/tc39/ecma262/issues/1052
-      if (newTarget === proxy) {
-        newTarget = target
-      }
-
-      return Reflect.construct(target, argumentsList, newTarget)
-    } finally {
-      postHook()
+    // when doing new on the proxy, behave like it was done on the function
+    // https://github.com/tc39/ecma262/issues/1052
+    if (newTarget === proxy) {
+      newTarget = target
     }
+
+    return hook(() => Reflect.construct(target, argumentsList, newTarget))
   }
 
   return proxy
@@ -71,4 +58,20 @@ function checkFunction (func, errorMessage) {
   }
 
   return func
+}
+
+function buildPrePostHook (preHook, postHook) {
+  checkFunction(preHook, 'Pre-hook must be a function')
+  checkFunction(postHook, 'Post-hook must be a function')
+
+  return function (func) {
+    preHook()
+
+    // use try-finally to call postHook even if the function throws
+    try {
+      return func()
+    } finally {
+      postHook()
+    }
+  }
 }
