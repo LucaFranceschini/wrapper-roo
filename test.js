@@ -433,8 +433,8 @@ describe('wrapper', function () {
 
   it('should return original toString() if accessed indirectly', function () {
     function foo () { }
-    foo.shh = foo.toString
-    wrap.the(foo).shh.should.equal(Function.prototype.toString)
+    foo.alias = foo.toString
+    wrap.the(foo).alias.should.equal(Function.prototype.toString)
   })
 
   it.skip('should always return the same toString()', function () {
