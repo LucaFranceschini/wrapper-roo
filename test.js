@@ -437,7 +437,7 @@ describe('wrapper', function () {
     wrap.the(foo).alias.should.equal(Function.prototype.toString)
   })
 
-  it.skip('should always return the same toString()', function () {
+  it('should always return the same toString()', function () {
     wrap.the(nop).toString.should.equal(wrap.the(nop).toString)
   })
 
