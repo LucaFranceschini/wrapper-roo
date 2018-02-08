@@ -32,7 +32,7 @@ Arguments and return value are forwarded, thus the wrapper can be used just like
 
 ## Installation
 ```
-npm -i wrapper-roo
+npm i wrapper-roo
 ```
 Then in Node.js:
 ```js
