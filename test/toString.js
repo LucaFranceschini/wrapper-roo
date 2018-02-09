@@ -23,9 +23,4 @@ describe('toString method', function () {
   it('should always return the same toString()', function () {
     wrap.the(nop).toString.should.equal(wrap.the(nop).toString)
   })
-
-  // still can't do this
-  it.skip('should return original toString()', function () {
-    wrap.the(nop).toString.should.equal(Function.prototype.toString)
-  })
 })
