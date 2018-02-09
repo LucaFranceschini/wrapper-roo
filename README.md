@@ -115,7 +115,7 @@ Basically, if it is a function then it will be correctly wrapped.
 ### Custom Hooks
 A *hook* is a higher-order function which takes a function `f` to be executed as an argument and does something before and after running `f`.
 
-It is desirable for the hook to return the result of the wrapped function in order not to lose it.
+It is desirable for the hook to return the result of the wrapped function in order not to lose it. Also, exceptions should be taken into account.
 
 ```js
 function gimme42 () { return 42 }
@@ -145,7 +145,7 @@ wrap.the(func)  // just wrap it
 ```
 
 ## Caveats
-*Of course*, identity is not preserved: `wrap.the(fun) !== func`.
+*Of course*, identity is not preserved: `wrap.the(func) !== func`.
 
 Other caveats of the current implementation are reported as issues on this repository.
 
