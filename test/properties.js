@@ -6,7 +6,7 @@ const { nop, wrap } = require('./setup')
  * handled by copying the internal prototype. Also, descriptor flags are set
  * to non-default values to do more meaningful tests.
  */
-describe('function object properties', function () {
+describe('Function object properties', function () {
   function unary (arg) { }
 
   it('should preserve function name', function () {

@@ -9,12 +9,12 @@ describe('ES6 classes', function () {
     }
   }
 
-  it('should work when func is a class (constructor)', function () {
+  it('should work when wrapped function is a class (constructor)', function () {
     const WrappedPerson = wrap.the(Person)
     new Person('alonzo').should.be.deep.equal(new WrappedPerson('alonzo'))
   })
 
-  it('should throw when func is a class but new is not used', function () {
+  it('should throw when wrapped function is a class but new is not used', function () {
     ;(() => Person('haskell')).should.throw(TypeError)
     const WrappedPerson = wrap.the(Person)
     ;(() => WrappedPerson('curry')).should.throw(TypeError)

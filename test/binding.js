@@ -2,7 +2,7 @@
 
 const { should, wrap } = require('./setup')
 
-describe('(explicit) binding', function () {
+describe('Binding', function () {
   function gimmeThis () { return this }
 
   // default `this` binding is `undefined` in strict mode for non-arrows

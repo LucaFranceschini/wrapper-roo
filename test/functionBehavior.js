@@ -2,7 +2,7 @@
 
 const { spy, wrap } = require('./setup')
 
-describe('wrapped function behavior', function () {
+describe('Wrapped function behavior', function () {
   it('should forward arguments', function () {
     const args = [1, 2, 3]
     const wrapped = wrap.the(spy)

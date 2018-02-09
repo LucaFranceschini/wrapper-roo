@@ -2,7 +2,7 @@
 
 const { nop, wrap } = require('./setup')
 
-describe('arguments and result checking', function () {
+describe('Arguments and result checking', function () {
   it('should throw if object to be wrapped is not a function', function () {
     (() => wrap.the('shit')).should.throw(TypeError)
   })

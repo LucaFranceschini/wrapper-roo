@@ -2,20 +2,20 @@
 
 const { nop, sinon, spy, wrap } = require('./setup')
 
-describe('number and order of invocations', function () {
-  it('should invoke preHook exactly once', function () {
+describe('Number and order of invocations', function () {
+  it('should invoke pre-hook exactly once', function () {
     const wrapped = wrap(nop).withPreHook(spy)
     wrapped()
     spy.should.have.been.calledOnce()
   })
 
-  it('should invoke postHook exactly once', function () {
+  it('should invoke post-hook exactly once', function () {
     const wrapped = wrap(nop).withPostHook(spy)
     wrapped()
     spy.should.have.been.calledOnce()
   })
 
-  it('should invoke hooks and func in the right order', function () {
+  it('should invoke hooks and wrapped function in the right order', function () {
     const preSpy = sinon.spy()
     const postSpy = sinon.spy()
     const wrapped = wrap(spy).withPrePostHooks(preSpy, postSpy)
@@ -24,7 +24,7 @@ describe('number and order of invocations', function () {
     postSpy.should.have.been.calledImmediatelyAfter(spy)
   })
 
-  it('should invoke func exactly once', function () {
+  it('should invoke wrapped function exactly once', function () {
     const wrapped = wrap.the(spy)
     wrapped()
     spy.should.have.been.calledOnce()

@@ -2,7 +2,7 @@
 
 const { wrap } = require('./setup')
 
-describe('constructor calls', function () {
+describe('Constructor calls', function () {
   function Box (value) { this.value = value }
 
   it('should not change constructed objects', function () {
