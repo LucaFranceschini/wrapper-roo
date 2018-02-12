@@ -147,7 +147,7 @@ wrap.the(func)  // just wrap it
 ## Caveats
 *Of course*, identity is not preserved: `wrap.the(func) !== func`.
 
-Other caveats of the current implementation are reported as issues on this repository.
+Other caveats of the current implementation are reported as unlabeled issues on this repository.
 
 ## Development
 ### Tools
