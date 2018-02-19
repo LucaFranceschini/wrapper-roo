@@ -31,7 +31,7 @@
     "nyc": "^11.3.0",
     "sinon": "^4.1.5",
     "sinon-chai": "^2.14.0",
-    "standard": "^10.0.3"
+    "standard": "^11.0.0"
   },
   "standard": {
     "env": [
