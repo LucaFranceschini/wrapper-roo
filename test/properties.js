@@ -68,10 +68,10 @@ describe('Function object properties', function () {
   // vanilla functions have 'prototype' property by default
   // however some functions don't, like bound functions
   it('should not introduce prototype property', function () {
-    const bound = nop.bind(null)  // bind 'this' to null, don't care
+    const bound = nop.bind(null) // bind 'this' to null, don't care
     const wrapped = wrap.the(bound)
     bound.should.not.have.own.property('prototype')
-    wrapped.should.not.have.property('prototype')  // not even inherited
+    wrapped.should.not.have.property('prototype') // not even inherited
   })
 
   it('should preserve the internal prototype', function () {
