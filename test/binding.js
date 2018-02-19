@@ -37,7 +37,7 @@ describe('Binding', function () {
    */
   it('should preserve constructor behavior of bound functions', function () {
     function Foo () { }
-    const Bound = Foo.bind(null)  // bind 'this' to null, don't care
+    const Bound = Foo.bind(null) // bind 'this' to null, don't care
     Bound.should.not.have.property('prototype')
 
     // now add a prototype property (this shouldn't happen in real code...)
