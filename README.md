@@ -105,7 +105,7 @@ console.log(foo.name === wrapped.name)  // 'foo'
 true
 ```
 The same holds for other *standard* function properties, like arity (`length`) or methods inherited from `Function`.
-If some properties were added to the function object (*eeeew...*), they are copied as well.
+If some properties were added to the function object, they are copied as well.
 Also, property descriptors are preserved.
 
 ### ECMAScript 6+ supported
