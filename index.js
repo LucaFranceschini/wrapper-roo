@@ -10,7 +10,7 @@ module.exports = wrap
 
 function wrap (func) {
   return {
-    withHook: hook => wrapWithHook(func, hook),
+    withCustomHook: hook => wrapWithHook(func, hook),
     withPreHook: pre => wrapWithHook(func, buildPrePostHook(pre, nop)),
     withPostHook: post => wrapWithHook(func, buildPrePostHook(nop, post)),
     withPrePostHooks: (pre, post) => wrapWithHook(func, buildPrePostHook(pre, post))
