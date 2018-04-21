@@ -31,7 +31,7 @@ describe('Number and order of invocations', function () {
   })
 
   it('should invoke the custom hook', function () {
-    wrap(nop).withHook(spy)()
+    wrap(nop).withCustomHook(spy)()
     spy.should.have.been.calledOnce()
   })
 })

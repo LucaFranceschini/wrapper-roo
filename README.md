@@ -120,7 +120,7 @@ It is desirable for the hook to return the result of the wrapped function in ord
 ```js
 function gimme42 () { return 42 }
 
-const wrapped = wrap(gimme42).withHook(f => {
+const wrapped = wrap(gimme42).withCustomHook(f => {
   const result = f()
   console.log('Result was ' + result)
   return result
@@ -140,7 +140,7 @@ const wrap = require('wrapper-roo')
 wrap(func).withPreHook(preHook)
 wrap(func).withPostHook(postHook)
 wrap(func).withPrePostHooks(preHook, postHook)
-wrap(func).withHook(hook)
+wrap(func).withCustomHook(hook)
 wrap.the(func)  // just wrap it
 ```
 
