@@ -7,7 +7,7 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Coverage Status](https://coveralls.io/repos/github/LucaFranceschini/wrapper-roo/badge.svg?branch=master)](https://coveralls.io/github/LucaFranceschini/wrapper-roo?branch=master)
 
-A general JavaScript function wrapper that allows to execute code before and after the function, while still being as transparent as possible to the rest of the code.
+A general JavaScript function wrapper that allows to execute code before and after the function, while still being as transparent as possible to the rest of the code. This last bit is what makes this wrapper different from existing ones.
 Available as npm module.
 
 ## Simple Example
