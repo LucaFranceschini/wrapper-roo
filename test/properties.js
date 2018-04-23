@@ -35,9 +35,12 @@ describe('Function object properties', function () {
   })
 
   it('should preserve prototype descriptors list', function () {
-    const originalDescriptors = Object.getOwnPropertyDescriptors(nop)
-    const wrappedDescriptors = Object.getOwnPropertyDescriptors(wrap.the(nop))
-    wrappedDescriptors.should.deep.equal(originalDescriptors)
+    // Object.getOwnPropertyDescriptors was introduced in ES8
+    if (Object.getOwnPropertyDescriptors) {
+      const originalDescriptors = Object.getOwnPropertyDescriptors(nop)
+      const wrappedDescriptors = Object.getOwnPropertyDescriptors(wrap.the(nop))
+      wrappedDescriptors.should.deep.equal(originalDescriptors)
+    }
   })
 
   it('should work with getters', function () {
