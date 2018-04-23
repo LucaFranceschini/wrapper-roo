@@ -16,6 +16,7 @@ The package can be locally installed from npm:
     $ npm i wrapper-roo
 
 ## Usage
+(more details can be found in the wiki)
 ### Example
 The following code add two console prints to be executed before and after a wrapped function:
 ```js
