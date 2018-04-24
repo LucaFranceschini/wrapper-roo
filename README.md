@@ -49,7 +49,7 @@ wrap(func).withCustomHook(hook)
 wrap.the(func)  // just wrap it
 ```
 
-## Caveats
+### Caveats
 *Of course*, identity is not preserved: `wrap.the(func) !== func`.
 
 Other caveats of the current implementation are reported as issues on this repository.
