@@ -1,6 +1,6 @@
-// require this file in every test suite
-
 'use strict'
+
+// require this file in every test suite
 
 const chai = require('chai')
 const dirtyChai = require('dirty-chai')
