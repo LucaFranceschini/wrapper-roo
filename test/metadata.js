@@ -24,5 +24,17 @@ describe('Function invocation metadata', function () {
     wrap(nop).withCustomHook((f, metadata) => hook(metadata))()
   })
 
-  it('should contain the correct arguments')
+  it('should contain the correct arguments', function () {
+    const args = [1, 2, 3]
+
+    function hook (metadata) {
+      metadata.arguments.should.deep.equal(args)
+    }
+
+    wrap(nop).withPreHook(hook)(...args)
+    wrap(nop).withPostHook(hook)(...args)
+    wrap(nop).withPrePostHooks(hook, hook)(...args)
+    // custom hooks additionally expects the function to call
+    wrap(nop).withCustomHook((f, metadata) => hook(metadata))(...args)
+  })
 })
