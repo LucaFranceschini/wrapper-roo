@@ -16,7 +16,6 @@ The package can be locally installed from npm:
     $ npm i wrapper-roo
 
 ## Usage
-(more details can be found in the wiki)
 ### Example
 The following code add two console prints to be executed before and after a wrapped function:
 ```js
@@ -53,6 +52,9 @@ wrap.the(func)  // just wrap it
 *Of course*, identity is not preserved: `wrap.the(func) !== func`.
 
 Other caveats of the current implementation are reported as issues on this repository.
+
+### More
+Take a look at the [wiki](https://github.com/LucaFranceschini/wrapper-roo/wiki).
 
 ## Contributing
 Install Node.js and npm, clone the repo and `cd` into it.
