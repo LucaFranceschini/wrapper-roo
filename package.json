@@ -38,7 +38,4 @@
       "mocha"
     ]
   },
-  "engines": {
-    "node": "10"
-  }
 }
