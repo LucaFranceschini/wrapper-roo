@@ -37,8 +37,5 @@
     "env": [
       "mocha"
     ]
-  },
-  "engines": {
-    "node": "8.x"
   }
 }
