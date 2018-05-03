@@ -2,7 +2,7 @@
 A general JavaScript **function wrapper** that allows to execute code before and after the function, while still being as **transparent** as possible to the rest of the code. This last bit is what makes this wrapper different from existing ones.
 Available as npm module.
 
-![Ripper Roo](ripper-roo.png)
+![Ripper Roo](./ripper-roo.png)
 
 [![npm version](https://badge.fury.io/js/wrapper-roo.svg)](https://badge.fury.io/js/wrapper-roo)
 [![Travis build status](https://api.travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
