@@ -4,9 +4,10 @@
 language: node_js
 
 node_js:
-  - "node"
-  - "lts/*"
-  - "lts/boron" # still in maintenance
+  - "10"
+  - "9"
+  - "lts/*" # 8
+  - "lts/boron" # 6, still in maintenance
 
 cache:
   directories:
