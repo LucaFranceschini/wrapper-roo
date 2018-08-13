@@ -51,7 +51,8 @@ wrap.the(func)  // just wrap it
 ### Caveats
 *Of course*, identity is not preserved: `wrap.the(func) !== func`.
 
-Other caveats of the current implementation are reported as issues on this repository.
+The current implementation is based on the Proxy API.
+Caveats of this approach (corner cases) are listed [here](https://github.com/LucaFranceschini/wrapper-roo/issues?q=is%3Aopen+is%3Aissue+label%3Aproxies).
 
 ### More
 Take a look at the [wiki](https://github.com/LucaFranceschini/wrapper-roo/wiki).
