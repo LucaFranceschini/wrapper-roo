@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "standard && nyc mocha",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "audit-ci": "./bin/npm-audit-ci --low"
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
