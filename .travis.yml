@@ -8,9 +8,9 @@ node_js:
   - "lts/*" # always last LTS version
   - "lts/boron" # previous LTS, still in maintenance
 
+# keep the npm cache around to speed up installs
 cache:
-  directories:
-    - "node_modules"
+  directories: "$HOME/.npm"
 
 after_success:
   - npm run coverage
