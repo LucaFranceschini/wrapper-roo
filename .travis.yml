@@ -1,5 +1,4 @@
-# file validation
-# https://docs.travis-ci.com/user/travis-lint
+# file validation: https://github.com/travis-ci/travis.rb#lint
 
 language: node_js
 
