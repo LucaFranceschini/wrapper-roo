@@ -12,9 +12,7 @@ cache:
   directories:
     - "node_modules"
 
-after_success:
-  - npm run coverage
-  - npm run audit-ci --low # check for vulnerabilities, even low
+after_success: npm run coverage
 
 notifications:
   email:
