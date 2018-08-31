@@ -12,6 +12,10 @@ describe('Function invocation metadata', function () {
     (() => new InvocationMetadata(() => {}, null)).should.throw(TypeError)
   })
 
+  it('should throw on non-boolean isCtor', function () {
+    (() => new InvocationMetadata(nop, [], 42)).should.throw(TypeError)
+  })
+
   it('should contain the original function', function () {
     // custom hooks additionally expects the function to call
     function hook (func, metadata) {
@@ -30,5 +34,13 @@ describe('Function invocation metadata', function () {
     }
 
     wrap(nop).withCustomHook(hook)(...args)
+  })
+
+  it('should recognize constructors', function () {
+    function hook (metadata) {
+      metadata.isConstructor.should.be.true()
+    }
+
+    wrap(nop).withPreHook(hook)()
   })
 })
