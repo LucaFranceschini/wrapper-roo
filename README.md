@@ -2,7 +2,7 @@
 A general JavaScript **function wrapper** that allows to execute code before and after the function, while still being as **transparent** as possible to the rest of the code. This last bit is what makes this wrapper different from existing ones.
 Available as npm module.
 
-![Ripper Roo](./ripper-roo.png)
+![Ripper Roo](ripper-roo.png)
 
 [![npm version](https://badge.fury.io/js/wrapper-roo.svg)](https://badge.fury.io/js/wrapper-roo)
 [![Travis build status](https://api.travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
@@ -16,7 +16,6 @@ The package can be locally installed from npm:
     $ npm i wrapper-roo
 
 ## Usage
-(more details can be found in the wiki)
 ### Example
 The following code add two console prints to be executed before and after a wrapped function:
 ```js
@@ -52,7 +51,11 @@ wrap.the(func)  // just wrap it
 ### Caveats
 *Of course*, identity is not preserved: `wrap.the(func) !== func`.
 
-Other caveats of the current implementation are reported as issues on this repository.
+The current implementation is based on the Proxy API.
+Caveats of this approach (corner cases) are listed [here](https://github.com/LucaFranceschini/wrapper-roo/issues?q=is%3Aopen+is%3Aissue+label%3Aproxies).
+
+### More
+Take a look at the [wiki](https://github.com/LucaFranceschini/wrapper-roo/wiki).
 
 ## Contributing
 Install Node.js and npm, clone the repo and `cd` into it.
