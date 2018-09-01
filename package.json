@@ -4,8 +4,11 @@
   "description": "JavaScript transparent function wrapper",
   "main": "index.js",
   "scripts": {
+    "lint": "standard",
+    "test-only": "mocha",
+    "test-coverage": "nyc mocha",
     "test": "standard && nyc mocha",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage-report": "nyc report --reporter=text-lcov | coveralls",
     "audit-ci": "npm-audit-ci --low"
   },
   "repository": {
