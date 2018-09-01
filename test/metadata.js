@@ -52,4 +52,27 @@ describe('Function invocation metadata', function () {
 
     wrap(nop).withPreHook(hook)()
   })
+
+  it('should expose thrown exception', function () {
+    function thrower () { throw new Error(42) }
+
+    function hook (metadata) {
+      metadata.exception.message.should.equal('42')
+    }
+
+    const wrapped = wrap(thrower).withPostHook(hook)
+    try {
+      wrapped()
+    } catch (e) { }
+  })
+
+  it('should expose result', function () {
+    function f () { return 42 }
+
+    function hook (metadata) {
+      metadata.result.should.equal(42)
+    }
+
+    wrap(f).withPostHook(hook)()
+  })
 })
