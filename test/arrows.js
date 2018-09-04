@@ -4,8 +4,7 @@ const { wrap } = require('./setup')
 
 describe('ES6 arrow functions', function () {
   it('should work with arrow functions', function () {
-    const double = n => n * 2
-    const wrapped = wrap.the(double)
+    const wrapped = wrap.the(n => n * 2)
     wrapped(42).should.equal(84)
   })
 
