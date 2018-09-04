@@ -14,7 +14,7 @@ describe('Function invocation metadata', function () {
     (() => new InvocationMetadata(() => {}, null)).should.throw(TypeError)
   })
 
-  it('should contain the original function', function () {
+  it('should have the original function', function () {
     // custom hooks additionally expects the function to call
     function hook (func, metadata) {
       metadata.function.should.equal(nop)
@@ -23,7 +23,7 @@ describe('Function invocation metadata', function () {
     wrap(nop).withCustomHook(hook)()
   })
 
-  it('should contain the correct arguments', function () {
+  it('should have the correct arguments', function () {
     const args = [1, 2, 3]
 
     // custom hooks additionally expects the function to call
@@ -34,7 +34,7 @@ describe('Function invocation metadata', function () {
     wrap(nop).withCustomHook(hook)(...args)
   })
 
-  it('should expose constructor in constructor calls', function () {
+  it('should have constructor in constructor calls', function () {
     function hook (metadata) {
       metadata.constructor.should.equal(Constructor)
     }
@@ -44,7 +44,7 @@ describe('Function invocation metadata', function () {
     new WrappedCtor() // eslint-disable-line no-new
   })
 
-  it('should not expose constructor in non-constructor calls', function () {
+  it('should not have constructor in non-constructor calls', function () {
     function hook (metadata) {
       // can't use should fluent API on undefined
       should.equal(metadata.constructor, undefined)
@@ -53,20 +53,18 @@ describe('Function invocation metadata', function () {
     wrap(nop).withPreHook(hook)()
   })
 
-  it('should expose thrown exception', function () {
+  it('should have thrown exception', function () {
     function thrower () { throw new Error(42) }
 
     function hook (metadata) {
       metadata.exception.message.should.equal('42')
     }
 
-    const wrapped = wrap(thrower).withPostHook(hook)
-    try {
-      wrapped()
-    } catch (e) { }
+    // the exception will still be thrown
+    wrap(thrower).withPostHook(hook).should.throw(/42/)
   })
 
-  it('should expose result', function () {
+  it('should have result', function () {
     function f () { return 42 }
 
     function hook (metadata) {
@@ -74,5 +72,27 @@ describe('Function invocation metadata', function () {
     }
 
     wrap(f).withPostHook(hook)()
+  })
+
+  it('should have this binding from method call', function () {
+    const obj = { }
+
+    function hook (metadata) {
+      metadata.this.should.equal(obj)
+    }
+
+    obj.method = wrap(nop).withPreHook(hook)
+    obj.method()
+  })
+
+  it('should have this binding from Function.bind', function () {
+    const obj = { }
+    const wrapped = wrap(nop).withPreHook(data => data.this.should.equal(obj))
+    const bound = wrapped.bind(obj)
+    bound()
+  })
+
+  it('should have the same bound function as the custom hook first argument', function () {
+    wrap(nop).withCustomHook((f, data) => data.boundFunction.should.equal(f))()
   })
 })
