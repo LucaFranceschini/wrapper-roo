@@ -1,17 +1,17 @@
 'use strict'
 
 const { nop, should, wrap } = require('./setup')
-const InvocationMetadata = require('../lib/metadata')
+const InvocationData = require('../lib/metadata')
 
 describe('Function invocation metadata', function () {
   function Constructor () { }
 
   it('should throw on non-function objects', function () {
-    (() => new InvocationMetadata(null, [])).should.throw(TypeError)
+    (() => new InvocationData(null, [])).should.throw(TypeError)
   })
 
   it('should throw on non-array arguments', function () {
-    (() => new InvocationMetadata(() => {}, null)).should.throw(TypeError)
+    (() => new InvocationData(() => {}, null)).should.throw(TypeError)
   })
 
   it('should have the original function', function () {
@@ -59,5 +59,17 @@ describe('Function invocation metadata', function () {
 
   it('should have the same bound function as the custom hook first argument', function () {
     wrap(nop).withCustomHook((f, data) => data.boundFunction.should.equal(f))()
+  })
+
+  it('should not allow to set exception after result', function () {
+    const data = new InvocationData(nop, [], undefined, undefined, nop)
+    data.result = 42
+    ;(() => { data.exception = new Error() }).should.throw(Error)
+  })
+
+  it('should not allow to set result after exception', function () {
+    const data = new InvocationData(nop, [], undefined, undefined, nop)
+    data.exception = new Error()
+    ;(() => { data.result = 42 }).should.throw(Error)
   })
 })
