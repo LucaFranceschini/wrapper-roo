@@ -16,7 +16,7 @@ describe('Arguments and result checking', function () {
   })
 
   it('should throw if custom hook is not a function', function () {
-    (() => wrap(nop).withHook("let's go")).should.throw(TypeError)
+    (() => wrap(nop).withCustomHook("let's go")).should.throw(TypeError)
   })
 
   it('should return a function', function () {

@@ -1,19 +1,19 @@
-# file validation
-# https://docs.travis-ci.com/user/travis-lint
+# file validation: https://github.com/travis-ci/travis.rb#lint
 
 language: node_js
 
 node_js:
-  - "10"
-  - "9"
-  - "lts/*" # 8
-  - "lts/boron" # 6, still in maintenance
+  - "node" # always last (stable) version
+  - "lts/*" # always last LTS version
+  - "lts/boron" # previous LTS, still in maintenance
 
+# keep the npm cache around to speed up installs
 cache:
-  directories:
-    - "node_modules"
+  directories: "$HOME/.npm"
 
-after_success: npm run coverage
+after_success:
+  - npm run coverage-report
+  - npm run audit-ci
 
 notifications:
   email:

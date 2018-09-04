@@ -1,6 +1,5 @@
 # wrapper-roo
-A general JavaScript **function wrapper** that allows to execute code before and after the function, while still being as **transparent** as possible to the rest of the code. This last bit is what makes this wrapper different from existing ones.
-Available as npm module.
+**Wrap** any function with custom hooks, executing code before and after the function, controlling arguments, result and so on, while still being as **transparent** as possible to the rest of the code.
 
 ![Ripper Roo](ripper-roo.png)
 
@@ -16,16 +15,17 @@ The package can be locally installed from npm:
     $ npm i wrapper-roo
 
 ## Usage
-### Example
-The following code add two console prints to be executed before and after a wrapped function:
+
+### Pre- and post-hooks
+A *hook* is a function to be executed before or after a given one:
 ```js
 const wrap = require('wrapper-roo')
 
-function hello(name) { console.log('hello ' + name) }
+function hello (name) { console.log('hello ' + name) }
 
 const wrapped = wrap(hello).withPrePostHooks(
-  () => console.log('before'),  // pre-hook
-  () => console.log('after'))   // post-hook
+  () => console.log('before'), // pre-hook
+  () => console.log('after')) // post-hook
 
 wrapped('Crash')
 ```
@@ -34,7 +34,52 @@ before
 hello Crash
 after
 ```
-Arguments and return value are forwarded, thus the wrapper can be used just like the original function.
+Arguments and return value are forwarded, thus the wrapper can be used just like the original function. See the [wiki](https://github.com/LucaFranceschini/wrapper-roo/wiki/Basic-Features-&-Forwarding) for more information.
+
+### Function Invocation Information
+Hooks receive information about the function call as their first argument:
+```js
+const wrap = require('wrapper-roo')
+
+function foo () { /* ... */ }
+
+const wrapped = wrap(foo).withPreHook(data => {
+  console.log('Calling function ' + data.function.name)
+  console.log('Args: ' + data.arguments)
+})
+
+wrapped(1, 'hey')
+```
+```
+Calling function foo on [1,hey]
+```
+Function invocation metadata object received by hooks contains the following properties:
+- `function`: original function object to be wrapped;
+- `arguments`: array of arguments that were given to the function;
+- `constructor`: value of `new.target` in the original call, namely, the function after the `new` keyword in constructor calls;
+- `this`: object bound to `this` for the call;
+- `boundFunction`: a version of the wrapped function that is already bound to arguments, `this` and `new.target`.
+
+Additional fields are available to post-hooks:
+- `result`: return value;
+- `exception`: thrown exception;
+- `success`: whether the execution of the function completed normally or an exception was thrown.
+
+**Note**: invocation data should be treated as *read-only* (though this is not enforced), since modifications to it are not supported and will have no effect on the function execution.
+
+### Custom Hooks
+Greater control can be achieved with custom hooks, if needed:
+```js
+const wrap = require('wrapper-roo')
+
+function foo () { /* ... */ }
+
+wrap(foo).withCustomHook((data, f) => { /* ... f() ... */ })
+```
+Custom hooks conveniently receive as a second argument the wrapped function already bound to `this` and arguments, and already set up as a constructor call if needed.
+Just call `f()`.
+
+Note that no automatic handling of binding, arguments, exceptions etc is performed when directly invoking the original function as `data.function`.
 
 ### (Fluent) API
 The following functions are exposed:
@@ -53,9 +98,6 @@ wrap.the(func)  // just wrap it
 
 The current implementation is based on the Proxy API.
 Caveats of this approach (corner cases) are listed [here](https://github.com/LucaFranceschini/wrapper-roo/issues?q=is%3Aopen+is%3Aissue+label%3Aproxies).
-
-### More
-Take a look at the [wiki](https://github.com/LucaFranceschini/wrapper-roo/wiki).
 
 ## Contributing
 Install Node.js and npm, clone the repo and `cd` into it.
