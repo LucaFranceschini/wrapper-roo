@@ -18,6 +18,6 @@ function wrap (func) {
 }
 
 // just wrap the original function, mostly useful for testing purposes
-wrap.the = func => wrapWithHook(func, f => f())
+wrap.the = func => wrapWithHook(func, (data, f) => f())
 
 function nop () { }

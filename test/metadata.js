@@ -58,7 +58,7 @@ describe('Function invocation metadata', function () {
   })
 
   it('should have the same bound function as the custom hook first argument', function () {
-    wrap(nop).withCustomHook((f, data) => data.boundFunction.should.equal(f))()
+    wrap(nop).withCustomHook((data, f) => data.boundFunction.should.equal(f))()
   })
 
   it('should not allow to set exception after result', function () {
