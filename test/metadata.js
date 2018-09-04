@@ -61,15 +61,13 @@ describe('Function invocation metadata', function () {
     wrap(nop).withCustomHook((data, f) => data.boundFunction.should.equal(f))()
   })
 
-  it('should not allow to set exception after result', function () {
-    const data = new InvocationData(nop, [], undefined, undefined, nop)
-    data.result = 42
-    ;(() => { data.exception = new Error() }).should.throw(Error)
+  it('should report success when no exception is thrown', function () {
+    wrap(nop).withPostHook(data => data.success.should.be.true)()
   })
 
-  it('should not allow to set result after exception', function () {
-    const data = new InvocationData(nop, [], undefined, undefined, nop)
-    data.exception = new Error()
-    ;(() => { data.result = 42 }).should.throw(Error)
+  it('should report failure when an exception is thrown', function () {
+    function thrower () { throw new Error(42) }
+    const wrapped = wrap(thrower).withPostHook(data => data.success.should.be.false)
+    wrapped.should.throw(/42/)
   })
 })
