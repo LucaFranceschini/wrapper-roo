@@ -1,7 +1,7 @@
 {
   "name": "wrapper-roo",
   "version": "0.1.10",
-  "description": "JavaScript transparent function wrapper",
+  "description": "JavaScript transparent function wrapper with reflection capabilities",
   "main": "index.js",
   "scripts": {
     "lint": "standard",
