@@ -16,7 +16,7 @@ const spy = sinon.spy()
 beforeEach('make the spy reusable', function () { spy.resetHistory() })
 
 // ad-hoc assertion to check prototypes
-chai.use(function (_chai, utils) {
+chai.use(function (_chai) {
   _chai.Assertion.addMethod('prototype', function (expected) {
     const found = Object.getPrototypeOf(this._obj)
 

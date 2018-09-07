@@ -7,7 +7,7 @@ const { nop, wrap } = require('./setup')
  * to non-default values to do more meaningful tests.
  */
 describe('Function object properties', function () {
-  function unary (arg) { }
+  function unary (_arg) { }
 
   it('should preserve function name', function () {
     wrap.the(nop).name.should.equal(nop.name)
