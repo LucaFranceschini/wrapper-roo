@@ -51,7 +51,8 @@ const wrapped = wrap(foo).withPreHook(data => {
 wrapped(1, 'hey')
 ```
 ```
-Calling function foo on [1,hey]
+Calling function foo
+Args: [1,hey]
 ```
 Function invocation metadata object received by hooks contains the following properties:
 - `function`: original function object to be wrapped;
