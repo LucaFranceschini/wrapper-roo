@@ -15,7 +15,7 @@ describe('ES6 classes', function () {
   })
 
   it('should throw when wrapped function is a class but new is not used', function () {
-    ;(() => Person('haskell')).should.throw(TypeError)
+    (() => Person('haskell')).should.throw(TypeError)
     const WrappedPerson = wrap.the(Person)
     ;(() => WrappedPerson('curry')).should.throw(TypeError)
   })
