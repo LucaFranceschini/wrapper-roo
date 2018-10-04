@@ -2,10 +2,11 @@
 
 language: node_js
 
+# https://github.com/nodejs/Release#release-schedule
 node_js:
-  - "node" # always last (stable) version
-  - "lts/*" # always last LTS version
-  - "lts/boron" # previous LTS, still in maintenance
+  - "10" # current release (Dubnium)
+  - "8" # active LTS (Carbon)
+  - "6" # maintenance LTS (Boron)
 
 # keep the npm cache around to speed up installs
 cache:
