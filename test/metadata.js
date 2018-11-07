@@ -6,6 +6,20 @@ const InvocationData = require('../lib/metadata')
 describe('Function invocation metadata', function () {
   function Constructor () { }
 
+  // fields exposed in the API
+  const exposedPreFields = [
+    'function',
+    'arguments',
+    'constructor',
+    'this',
+    'boundFunction'
+  ]
+  const exposedPostFields = exposedPreFields.concat(
+    'result',
+    'exception',
+    'success'
+  )
+
   it('should throw on non-function objects', function () {
     (() => new InvocationData(null, [])).should.throw(TypeError)
   })
@@ -61,13 +75,24 @@ describe('Function invocation metadata', function () {
     wrap(nop).withCustomHook((data, f) => data.boundFunction.should.equal(f))()
   })
 
-  it('should report success when no exception is thrown', function () {
-    wrap(nop).withPostHook(data => data.success.should.be.true)()
-  })
+  it('should have immutable properties (those in the API)', function () {
+    const wrapped = wrap(nop).withPrePostHooks(
+      data => { // pre-hook
+        for (const property of exposedPostFields) {
+          if (data[property]) {  // some fields may be missing
+            data.should.have.immutableField(property)
+          }
+        }
+      },
+      data => { // post-hook
+        for (const property of exposedPostFields) {
+          if (data[property]) {  // some fields may be missing
+            data.should.have.immutableField(property)
+          }
+        }
+      }
+    )
 
-  it('should report failure when an exception is thrown', function () {
-    function thrower () { throw new Error(42) }
-    const wrapped = wrap(thrower).withPostHook(data => data.success.should.be.false)
-    wrapped.should.throw(/42/)
+    wrapped()
   })
 })
