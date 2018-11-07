@@ -79,14 +79,14 @@ describe('Function invocation metadata', function () {
     const wrapped = wrap(nop).withPrePostHooks(
       data => { // pre-hook
         for (const property of exposedPostFields) {
-          if (data[property]) {  // some fields may be missing
+          if (data[property]) { // some fields may be missing
             data.should.have.immutableField(property)
           }
         }
       },
       data => { // post-hook
         for (const property of exposedPostFields) {
-          if (data[property]) {  // some fields may be missing
+          if (data[property]) { // some fields may be missing
             data.should.have.immutableField(property)
           }
         }
