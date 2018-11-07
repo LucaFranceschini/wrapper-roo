@@ -31,6 +31,21 @@ chai.use(function (_chai) {
   })
 })
 
+// ad-hoc assertion to check non-writable non-configurable class fields
+chai.use(function (_chai) {
+  _chai.Assertion.addMethod('immutableField', function (key) {
+    const descriptor = Object.getOwnPropertyDescriptor(this._obj, key)
+
+    this.assert(
+      !(descriptor.configurable || descriptor.writable),
+      // normal and negated assertion message, respectively
+      'expected #{this} to have non-configurable non-writable property #{exp}',
+      'expected #{this} to not have prototype configurable or writable property #{exp}',
+      key // expected
+    )
+  })
+})
+
 function nop () { }
 
 module.exports = {
