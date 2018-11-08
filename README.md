@@ -66,7 +66,7 @@ Additional fields are available to post-hooks:
 - `exception`: thrown exception;
 - `success`: whether the execution of the function completed normally or an exception was thrown.
 
-**Note**: invocation data should be treated as *read-only* (though this is not enforced), since modifications to it are not supported and will have no effect on the function execution.
+**Note**: invocation data is *read-only*: modifications to properties above are not allowed and will have no effect on the function execution.
 
 ### Custom Hooks
 Greater control can be achieved with custom hooks, if needed:
