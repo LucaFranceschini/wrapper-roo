@@ -1,7 +1,7 @@
 # wrapper-roo
 **Wrap** any function with custom hooks, executing code before and after the function, controlling arguments, result and so on, while still being as **transparent** as possible to the rest of the code.
 
-![Ripper Roo](ripper-roo.png)
+![Logo](https://raw.githubusercontent.com/LucaFranceschini/wrapper-roo/master/ripper-roo.png)
 
 [![npm version](https://badge.fury.io/js/wrapper-roo.svg)](https://badge.fury.io/js/wrapper-roo)
 [![Travis build status](https://api.travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
