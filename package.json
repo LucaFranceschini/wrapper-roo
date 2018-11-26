@@ -1,6 +1,6 @@
 {
   "name": "wrapper-roo",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "JavaScript transparent function wrapper with reflection capabilities",
   "main": "index.js",
   "scripts": {
