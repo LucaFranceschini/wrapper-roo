@@ -80,7 +80,7 @@ wrap(foo).withCustomHook((data, f) => { /* ... f() ... */ })
 Custom hooks conveniently receive as a second argument the wrapped function already bound to `this` and arguments, and already set up as a constructor call if needed.
 Just call `f()`.
 
-Note that no automatic handling of binding, arguments, exceptions etc is performed when directly invoking the original function as `data.function`.
+Note that no automatic handling of binding, arguments, exceptions etc is performed when directly invoking the original function as `data.function()`.
 
 ### (Fluent) API
 The following functions are exposed:
