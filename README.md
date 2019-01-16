@@ -104,12 +104,12 @@ Caveats of this approach (corner cases) are listed [here](https://github.com/Luc
 Install Node.js and npm, clone the repo and `cd` into it.
 
 To install dependencies:
-```sh
+```
 $ npm i
 ```
 
 To run linter, tests and get coverage report:
-```sh
+```
 $ npm test
 ```
 
