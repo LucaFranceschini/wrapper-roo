@@ -13,9 +13,10 @@ node_js:
 cache:
   directories: "$HOME/.npm"
 
-after_success:
-  - npm run coverage-report
-  - npm run audit-ci
+# break build if vulnerabilities in dependencies are found
+before_script: npm audit
+
+after_success: npm run coverage-report
 
 notifications:
   email:
