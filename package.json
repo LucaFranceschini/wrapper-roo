@@ -8,8 +8,7 @@
     "test-only": "mocha",
     "test-coverage": "nyc mocha",
     "test": "standard && nyc mocha",
-    "coverage-report": "nyc report --reporter=text-lcov | coveralls",
-    "audit-ci": "npm-audit-ci --low"
+    "coverage-report": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -32,7 +31,6 @@
     "coveralls": "^3.0.2",
     "dirty-chai": "^2.0.1",
     "mocha": "^6.0.0",
-    "npm-audit-ci": "^1.0.1",
     "nyc": "^13.0.1",
     "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0",
