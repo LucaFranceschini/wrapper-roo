@@ -20,7 +20,6 @@ notifications:
 
 # For greenkeeper lockfile see https://github.com/greenkeeperio/greenkeeper-lockfile
 before_install:
-  - npm audit # break build if vulnerabilities in dependencies are found
   - npm install -g npm
   - npm install -g greenkeeper-lockfile@1
 before_script: greenkeeper-lockfile-update
