@@ -4,7 +4,8 @@ language: node_js
 
 # https://github.com/nodejs/Release#release-schedule
 node_js:
-  - "12" # current
+  - "13" # current
+  - "12" # active LTS (Erbium)
   - "10" # active LTS (Dubnium)
   - "8" # maintenance LTS (Carbon)
 
