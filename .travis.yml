@@ -19,9 +19,5 @@ notifications:
   email:
     on_success: never
 
-# For greenkeeper lockfile see https://github.com/greenkeeperio/greenkeeper-lockfile
 before_install:
   - npm install -g npm
-  - npm install -g greenkeeper-lockfile@1
-before_script: greenkeeper-lockfile-update
-after_script: greenkeeper-lockfile-upload
