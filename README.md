@@ -111,4 +111,5 @@ To run linter, tests and get coverage report:
 $ npm test
 ```
 
-See the [wiki page](https://github.com/LucaFranceschini/wrapper-roo/wiki/Contributing) for more information.
+## Wiki
+See the [wiki page](https://github.com/LucaFranceschini/wrapper-roo/wiki) for more information.
