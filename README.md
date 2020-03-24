@@ -5,8 +5,6 @@
 
 [![npm version](https://badge.fury.io/js/wrapper-roo.svg)](https://badge.fury.io/js/wrapper-roo)
 [![Travis build status](https://api.travis-ci.org/LucaFranceschini/wrapper-roo.svg?branch=master)](https://travis-ci.org/LucaFranceschini/wrapper-roo)
-[![Coverage Status](https://coveralls.io/repos/github/LucaFranceschini/wrapper-roo/badge.svg?branch=master)](https://coveralls.io/github/LucaFranceschini/wrapper-roo?branch=master)
-[![Greenkeeper badge](https://badges.greenkeeper.io/LucaFranceschini/wrapper-roo.svg)](https://greenkeeper.io/)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Installation
@@ -113,4 +111,5 @@ To run linter, tests and get coverage report:
 $ npm test
 ```
 
-See the [wiki page](https://github.com/LucaFranceschini/wrapper-roo/wiki/Contributing) for more information.
+## Wiki
+See the [wiki page](https://github.com/LucaFranceschini/wrapper-roo/wiki) for more information.
