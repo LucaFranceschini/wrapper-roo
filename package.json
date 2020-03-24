@@ -7,8 +7,7 @@
     "lint": "standard",
     "test-only": "mocha",
     "test-coverage": "nyc mocha",
-    "test": "standard && nyc mocha",
-    "coverage-report": "nyc report --reporter=text-lcov | coveralls"
+    "test": "standard && nyc mocha"
   },
   "repository": {
     "type": "git",
