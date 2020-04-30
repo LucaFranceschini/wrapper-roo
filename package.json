@@ -7,7 +7,9 @@
     "lint": "standard",
     "test-only": "mocha",
     "test-coverage": "nyc mocha",
-    "test": "standard && nyc mocha"
+    "test": "standard && nyc mocha",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -38,5 +40,9 @@
     "env": [
       "mocha"
     ]
+  },
+  "snyk": true,
+  "dependencies": {
+    "snyk": "^1.316.1"
   }
 }
