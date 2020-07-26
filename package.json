@@ -8,7 +8,7 @@
     "test-only": "mocha",
     "test-coverage": "nyc mocha",
     "test": "standard && nyc mocha",
-    "snyk-protect": "snyk protect",
+    "snyk-protect": "snyk protect --dev",
     "prepare": "npm run snyk-protect"
   },
   "repository": {
