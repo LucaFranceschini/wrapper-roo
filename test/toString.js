@@ -23,4 +23,9 @@ describe('toString method', function () {
   it('should always return the same toString()', function () {
     wrap.the(nop).toString.should.equal(wrap.the(nop).toString)
   })
+
+  it('should not throw directly calling Function.prototype.toString on wrapped function', function () {
+    const wrapped = wrap.the(nop)
+    Function.prototype.toString.call(wrapped)
+  })
 })
