@@ -3,3 +3,6 @@ node_modules
 
 # coverage report
 .nyc_output
+
+# Visual Studio folder
+.vs
