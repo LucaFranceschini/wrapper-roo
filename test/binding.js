@@ -1,6 +1,6 @@
 'use strict'
 
-import { should, wrap } from './setup.js'
+import { expect, wrap } from './setup.js'
 
 describe('Binding', function () {
   function gimmeThis () { return this }
@@ -8,7 +8,7 @@ describe('Binding', function () {
   // default `this` binding is `undefined` in strict mode for non-arrows
   it('should preserve default this binding (undefined)', function () {
     const wrapped = wrap.the(gimmeThis)
-    should.equal(wrapped(), gimmeThis())
+    expect(wrapped()).to.equal(gimmeThis())
   })
 
   it('should preserve bind() explicit binding', function () {

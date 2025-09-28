@@ -1,6 +1,6 @@
 'use strict'
 
-import { nop, should, wrap } from './setup.js'
+import { expect, nop, wrap } from './setup.js'
 import InvocationData from '../lib/metadata.js'
 
 describe('Function invocation metadata', function () {
@@ -45,7 +45,7 @@ describe('Function invocation metadata', function () {
   })
 
   it('should not have constructor in non-constructor calls', function () {
-    wrap(nop).withPreHook(data => should.equal(data.constructor, undefined))()
+    wrap(nop).withPreHook(data => expect(data.constructor).to.be.undefined)()
   })
 
   it('should have thrown exception', function () {

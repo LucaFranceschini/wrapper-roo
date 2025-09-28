@@ -2,14 +2,15 @@
 
 // require this file in every test suite
 
-import chai from 'chai'
+import * as chai from 'chai'
+import { should, expect } from 'chai'
+import 'chai/register-should.js' // using Should style
 
 import dirtyChai from 'dirty-chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai' // load after dirty-chai
 import wrap from '../index.js'
 
-const should = chai.should() // use should-style assertions
 chai.use(dirtyChai) // lint-friendly assertions
 chai.use(sinonChai) // Sinon mocking framework
 
@@ -50,6 +51,7 @@ chai.use(function (_chai) {
 function nop () { }
 
 export {
+  expect,
   nop,
   should,
   sinon,
