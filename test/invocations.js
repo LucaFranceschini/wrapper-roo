@@ -1,6 +1,6 @@
 'use strict'
 
-const { nop, sinon, spy, wrap } = require('./setup')
+import { nop, sinon, spy, wrap } from './setup.js'
 
 describe('Number and order of invocations', function () {
   it('should invoke pre-hook exactly once', function () {

@@ -1,12 +1,12 @@
 'use strict'
 
-const buildPrePostHook = require('./lib/prePostHooks')
-const wrapWithHook = require('./lib/wrapper')
+import buildPrePostHook from './lib/prePostHooks.js'
+import wrapWithHook from './lib/wrapper.js'
 
 // fluent API, consider wrap = require('wrapper-roo')
 // don't put logic here
 
-module.exports = wrap
+export default wrap
 
 function wrap (func) {
   return {

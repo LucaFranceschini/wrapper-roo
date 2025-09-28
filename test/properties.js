@@ -1,6 +1,6 @@
 'use strict'
 
-const { nop, wrap } = require('./setup')
+import { nop, wrap } from './setup.js'
 
 /* The following tests only look at own properties because inherited ones are
  * handled by copying the internal prototype. Also, descriptor flags are set

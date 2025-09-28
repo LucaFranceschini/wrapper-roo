@@ -1,6 +1,6 @@
 'use strict'
 
-const { nop, spy, wrap } = require('./setup')
+import { nop, spy, wrap } from './setup.js'
 
 describe('toString method', function () {
   it('should preserve toString() result', function () {

@@ -1,7 +1,7 @@
 'use strict'
 
-const { nop, should, wrap } = require('./setup')
-const InvocationData = require('../lib/metadata')
+import { nop, should, wrap } from './setup.js'
+import InvocationData from '../lib/metadata.js'
 
 describe('Function invocation metadata', function () {
   function Constructor () { }

@@ -2,11 +2,12 @@
 
 // require this file in every test suite
 
-const chai = require('chai')
-const dirtyChai = require('dirty-chai')
-const sinon = require('sinon')
-const sinonChai = require('sinon-chai') // load after dirty-chai
-const wrap = require('../index')
+import chai from 'chai'
+
+import dirtyChai from 'dirty-chai'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai' // load after dirty-chai
+import wrap from '../index.js'
 
 const should = chai.should() // use should-style assertions
 chai.use(dirtyChai) // lint-friendly assertions
@@ -48,7 +49,7 @@ chai.use(function (_chai) {
 
 function nop () { }
 
-module.exports = {
+export {
   nop,
   should,
   sinon,

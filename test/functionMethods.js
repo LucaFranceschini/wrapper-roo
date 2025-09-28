@@ -1,6 +1,6 @@
 'use strict'
 
-const { nop, wrap } = require('./setup')
+import { nop, wrap } from './setup.js'
 
 describe('Function methods', function () {
   // foo.apply could be redefined to do something different from function call

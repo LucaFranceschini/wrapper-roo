@@ -1,6 +1,6 @@
 'use strict'
 
-const { nop, wrap } = require('./setup')
+import { nop, wrap } from './setup.js'
 
 describe('Arguments and result checking', function () {
   it('should throw if object to be wrapped is not a function', function () {

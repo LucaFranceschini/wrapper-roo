@@ -1,6 +1,6 @@
 'use strict'
 
-const { wrap } = require('./setup')
+import { wrap } from './setup.js'
 
 describe('Constructor calls', function () {
   function Box (value) { this.value = value }

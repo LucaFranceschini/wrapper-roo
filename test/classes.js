@@ -1,6 +1,6 @@
 'use strict'
 
-const { wrap } = require('./setup')
+import { wrap } from './setup.js'
 
 describe('ES6 classes', function () {
   class Person {

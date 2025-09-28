@@ -3,6 +3,7 @@
   "version": "0.2.9",
   "description": "JavaScript transparent function wrapper with reflection capabilities",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "standard",
     "test-only": "mocha",

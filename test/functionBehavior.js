@@ -1,6 +1,6 @@
 'use strict'
 
-const { spy, wrap } = require('./setup')
+import { spy, wrap } from './setup.js'
 
 describe('Wrapped function behavior', function () {
   it('should forward arguments', function () {

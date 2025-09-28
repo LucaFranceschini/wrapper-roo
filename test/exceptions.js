@@ -1,6 +1,6 @@
 'use strict'
 
-const { nop, sinon, spy, wrap } = require('./setup')
+import { nop, sinon, spy, wrap } from './setup.js'
 
 describe('Exception handling', function () {
   function throw42 () { throw new Error(42) }

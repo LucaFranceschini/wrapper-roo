@@ -1,6 +1,6 @@
 'use strict'
 
-const { should, wrap } = require('./setup')
+import { should, wrap } from './setup.js'
 
 describe('Binding', function () {
   function gimmeThis () { return this }
