@@ -6,9 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint",
-    "test-only": "mocha",
-    "test-coverage": "nyc mocha",
-    "test": "eslint && nyc mocha"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -32,7 +30,6 @@
     "eslint": "^9.36.0",
     "mocha": "^11.0.1",
     "neostandard": "^0.12.2",
-    "nyc": "^17.0.0",
     "sinon": "^21.0.0",
     "sinon-chai": "^4.0.1"
   },
