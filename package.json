@@ -30,7 +30,7 @@
     "eslint": "^9.36.0",
     "mocha": "^11.0.1",
     "neostandard": "^0.13.0",
-    "sinon": "^21.0.0",
+    "sinon": "^22.0.0",
     "sinon-chai": "^4.0.1"
   },
   "standard": {
