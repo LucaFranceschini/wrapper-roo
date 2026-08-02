@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "lint": "eslint"
+    "lint": "eslint",
+	"test": "node --test",
+	"test-coverage": "node --test --experimental-test-coverage",
   },
   "repository": {
     "type": "git",
