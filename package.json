@@ -5,6 +5,8 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
+		"check": "npx @biomejs/biome check --write",
+		"ci-check": "npx @biomejs/biome ci --write",
 		"format": "npx @biomejs/biome format --write",
 		"lint": "npx @biomejs/biome lint --write",
 		"test": "node --test",

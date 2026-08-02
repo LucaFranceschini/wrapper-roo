@@ -1,5 +1,3 @@
-
-
 import { assert, describe, it, wrap } from "./setup.js";
 
 describe("ES6 classes", () => {
@@ -39,8 +37,8 @@ describe("ES6 classes", () => {
 	it("should preserve class static methods", () => {
 		class NiceGuy {
 			// add a method to avoid static-only classes warnings
-			someMethod() { }
-			
+			someMethod() {}
+
 			static sayHi() {
 				return "hi";
 			}

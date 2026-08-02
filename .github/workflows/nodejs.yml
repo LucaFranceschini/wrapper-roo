@@ -24,7 +24,7 @@ jobs:
         node-version: ${{ matrix.version }}
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm run format
+    - run: npm run ci-check
     - run: npm test
       env:
         CI: true

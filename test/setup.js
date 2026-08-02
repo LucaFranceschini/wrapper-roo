@@ -1,5 +1,3 @@
-
-
 // require this file in every test suite
 
 import assert from "node:assert/strict";

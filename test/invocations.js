@@ -1,5 +1,3 @@
-
-
 import { assert, describe, it, nop, sinon, wrap } from "./setup.js";
 
 describe("Number and order of invocations", () => {

@@ -1,5 +1,3 @@
-
-
 import { assert, describe, it, nop, wrap } from "./setup.js";
 
 describe("Arguments and result checking", () => {

@@ -1,5 +1,3 @@
-
-
 import { assert, describe, it, nop, wrap } from "./setup.js";
 
 describe("Function methods", () => {

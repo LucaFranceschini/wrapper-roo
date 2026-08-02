@@ -1,5 +1,3 @@
-
-
 import { assert, describe, it, wrap } from "./setup.js";
 
 describe("Constructor calls", () => {

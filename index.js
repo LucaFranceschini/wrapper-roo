@@ -1,5 +1,3 @@
-
-
 import buildPrePostHook from "./lib/prePostHooks.js";
 import wrapWithHook from "./lib/wrapper.js";
 

@@ -1,5 +1,3 @@
-
-
 import { assert, describe, it, sinon, wrap } from "./setup.js";
 
 describe("Wrapped function behavior", () => {

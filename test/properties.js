@@ -1,5 +1,3 @@
-
-
 import { assert, describe, it, nop, wrap } from "./setup.js";
 
 /* The following tests only look at own properties because inherited ones are
