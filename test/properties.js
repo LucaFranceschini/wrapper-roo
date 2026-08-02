@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, nop, wrap } from './setup.js'
+import { assert, describe, it, nop, wrap } from './setup.js'
 
 /* The following tests only look at own properties because inherited ones are
  * handled by copying the internal prototype. Also, descriptor flags are set

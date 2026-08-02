@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, nop, wrap } from './setup.js'
+import { assert, describe, it, nop, wrap } from './setup.js'
 
 describe('Arguments and result checking', function () {
   it('should throw if object to be wrapped is not a function', function () {

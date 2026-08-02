@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, wrap } from './setup.js'
+import { assert, describe, it, wrap } from './setup.js'
 
 describe('ES6 generator functions', function () {
   it('should work with generator functions', function () {

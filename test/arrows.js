@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, wrap } from './setup.js'
+import { assert, describe, it, wrap } from './setup.js'
 
 describe('ES6 arrow functions', function () {
   it('should work with arrow functions', function () {

@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, nop, sinon, spy, wrap } from './setup.js'
+import { assert, describe, it, nop, sinon, wrap } from './setup.js'
 
 describe('toString method', function () {
   it('should preserve toString() result', function () {
@@ -9,6 +9,7 @@ describe('toString method', function () {
 
   it('should called overridden toString() if any', function () {
     function foo () { }
+	const spy = sinon.spy()
     foo.toString = spy
     wrap.the(foo).toString()
 	sinon.assert.calledOnce(spy)

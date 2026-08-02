@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, nop, sinon, spy, wrap } from './setup.js'
+import { assert, describe, it, nop, sinon, wrap } from './setup.js'
 
 describe('Exception handling', function () {
   function throw42 () { throw new Error(42) }
@@ -22,6 +22,7 @@ describe('Exception handling', function () {
   })
 
   it('should call post-hook exactly once even if wrapped function throws', function () {
+	const spy = sinon.spy()
     const wrapped = wrap(throw42).withPostHook(spy)
     assert.throws(wrapped ,/42/)
 	sinon.assert.calledOnce(spy)
@@ -35,6 +36,7 @@ describe('Exception handling', function () {
   })
 
   it('should invoke post-hook even when wrapped function throws', function () {
+	  const spy = sinon.spy()
     const wrapped = wrap(throw42).withPostHook(spy)
     assert.throws(wrapped, /42/)
 	sinon.assert.calledOnce(spy)

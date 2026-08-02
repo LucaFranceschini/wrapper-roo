@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, nop, wrap } from './setup.js'
+import { assert, describe, it, nop, wrap } from './setup.js'
 import InvocationData from '../lib/metadata.js'
 
 describe('Function invocation metadata', function () {

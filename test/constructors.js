@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, wrap } from './setup.js'
+import { assert, describe, it, wrap } from './setup.js'
 
 describe('Constructor calls', function () {
   function Box (value) { this.value = value }

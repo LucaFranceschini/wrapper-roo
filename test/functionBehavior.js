@@ -1,10 +1,11 @@
 'use strict'
 
-import { assert, sinon, spy, wrap } from './setup.js'
+import { assert, describe, it, sinon, wrap } from './setup.js'
 
 describe('Wrapped function behavior', function () {
   it('should forward arguments', function () {
     const args = [1, 2, 3]
+	const spy = sinon.spy()
     const wrapped = wrap.the(spy)
     wrapped(...args)
 	sinon.assert.calledWithExactly(spy, ...args)

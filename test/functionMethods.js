@@ -1,6 +1,6 @@
 'use strict'
 
-import { assert, nop, wrap } from './setup.js'
+import { assert, describe, it, nop, wrap } from './setup.js'
 
 describe('Function methods', function () {
   // foo.apply could be redefined to do something different from function call
