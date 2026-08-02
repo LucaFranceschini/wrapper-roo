@@ -1,41 +1,35 @@
 {
-  "name": "wrapper-roo",
-  "version": "0.2.9",
-  "description": "JavaScript transparent function wrapper with reflection capabilities",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "lint": "eslint",
-    "test": "mocha"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LucaFranceschini/wrapper-roo.git"
-  },
-  "keywords": [
-    "wrapper",
-    "functions",
-    "instrumentation",
-    "monitoring"
-  ],
-  "author": "Luca Franceschini <luca.franceschini92@gmail.com> (https://github.com/LucaFranceschini)",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/LucaFranceschini/wrapper-roo/issues"
-  },
-  "homepage": "https://github.com/LucaFranceschini/wrapper-roo#readme",
-  "devDependencies": {
-    "chai": "^6.2.0",
-    "dirty-chai": "^3.0.0-rc.1",
-    "eslint": "^9.36.0",
-    "mocha": "^11.0.1",
-    "neostandard": "^0.13.0",
-    "sinon": "^22.0.0",
-    "sinon-chai": "^4.0.1"
-  },
-  "standard": {
-    "env": [
-      "mocha"
-    ]
-  }
+	"name": "wrapper-roo",
+	"version": "0.2.10",
+	"description": "JavaScript transparent function wrapper with reflection capabilities",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"check": "npx @biomejs/biome check --write",
+		"ci-check": "npx @biomejs/biome ci",
+		"format": "npx @biomejs/biome format --write",
+		"lint": "npx @biomejs/biome lint --write",
+		"test": "node --test",
+		"test-coverage": "node --test --experimental-test-coverage"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/LucaFranceschini/wrapper-roo.git"
+	},
+	"keywords": [
+		"wrapper",
+		"functions",
+		"instrumentation",
+		"monitoring"
+	],
+	"author": "Luca Franceschini <luca.franceschini92@gmail.com> (https://github.com/LucaFranceschini)",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/LucaFranceschini/wrapper-roo/issues"
+	},
+	"homepage": "https://github.com/LucaFranceschini/wrapper-roo#readme",
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.6",
+		"sinon": "^22.0.0"
+	}
 }
