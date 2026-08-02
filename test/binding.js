@@ -1,19 +1,19 @@
-"use strict";
+
 
 import { assert, describe, it, wrap } from "./setup.js";
 
-describe("Binding", function () {
+describe("Binding", () => {
 	function gimmeThis() {
 		return this;
 	}
 
 	// default `this` binding is `undefined` in strict mode for non-arrows
-	it("should preserve default this binding (undefined)", function () {
+	it("should preserve default this binding (undefined)", () => {
 		const wrapped = wrap.the(gimmeThis);
 		assert.strictEqual(wrapped(), gimmeThis());
 	});
 
-	it("should preserve bind() explicit binding", function () {
+	it("should preserve bind() explicit binding", () => {
 		// do not bind to 'this' here, it would be the testing context
 		// it is cyclic so not printable in case of errors
 		const obj = {};
@@ -23,7 +23,7 @@ describe("Binding", function () {
 		assert.strictEqual(wrapped(), obj);
 	});
 
-	it("should preserve call() explicit binding", function () {
+	it("should preserve call() explicit binding", () => {
 		const wrapped = wrap.the(gimmeThis);
 		const obj = {};
 
@@ -39,10 +39,10 @@ describe("Binding", function () {
 	 * to detect bound functions.
 	 * Note: we're not talking about the internal [[Prototype]].
 	 */
-	it("should preserve constructor behavior of bound functions", function () {
+	it("should preserve constructor behavior of bound functions", () => {
 		function Foo() {}
 		const Bound = Foo.bind(null); // bind 'this' to null, don't care
-		assert.strictEqual(Bound.hasOwnProperty("prototype"), false);
+		assert.strictEqual(Object.hasOwn(Bound, "prototype"), false);
 
 		// now add a prototype property (this shouldn't happen in real code...)
 		Bound.prototype = {};
@@ -59,7 +59,7 @@ describe("Binding", function () {
 		assert.notEqual(Object.getPrototypeOf(new Wrapped()), Bound.prototype);
 	});
 
-	it("should allow partial application with Function.bind", function () {
+	it("should allow partial application with Function.bind", () => {
 		function Pair(a, b) {
 			this.a = a;
 			this.b = b;
@@ -81,7 +81,7 @@ describe("Binding", function () {
 		assert.deepStrictEqual(new Pair42("foo"), new WrappedPair42("foo"));
 	});
 
-	it("should be bindable after wrapping", function () {
+	it("should be bindable after wrapping", () => {
 		// exploit both 'this' binding and (partial) argument binding
 		function thisPlusArgs(a, b) {
 			return this + a + b;

@@ -1,9 +1,9 @@
-"use strict";
+
 
 import { assert, describe, it, nop, wrap } from "./setup.js";
 import InvocationData from "../lib/metadata.js";
 
-describe("Function invocation metadata", function () {
+describe("Function invocation metadata", () => {
 	function Constructor() {}
 
 	// fields exposed in the API
@@ -20,21 +20,21 @@ describe("Function invocation metadata", function () {
 		"success",
 	);
 
-	it("should throw on non-function objects", function () {
+	it("should throw on non-function objects", () => {
 		assert.throws(() => new InvocationData(null, []), TypeError);
 	});
 
-	it("should throw on non-array arguments", function () {
+	it("should throw on non-array arguments", () => {
 		assert.throws(() => new InvocationData(() => {}, null), TypeError);
 	});
 
-	it("should have the original function", function () {
+	it("should have the original function", () => {
 		wrap(nop).withPreHook((data) =>
 			assert.deepStrictEqual(data.function, nop),
 		)();
 	});
 
-	it("should have the correct arguments", function () {
+	it("should have the correct arguments", () => {
 		const args = [1, 2, 3];
 		const wrapped = wrap(nop).withPreHook((data) =>
 			assert.deepStrictEqual(data.arguments, args),
@@ -42,20 +42,20 @@ describe("Function invocation metadata", function () {
 		wrapped(...args);
 	});
 
-	it("should have constructor in constructor calls", function () {
+	it("should have constructor in constructor calls", () => {
 		const Wrapped = wrap(Constructor).withPreHook((data) =>
 			assert.deepStrictEqual(data.constructor, Constructor),
 		);
 		new Wrapped();
 	});
 
-	it("should not have constructor in non-constructor calls", function () {
+	it("should not have constructor in non-constructor calls", () => {
 		wrap(nop).withPreHook((data) =>
 			assert.deepStrictEqual(data.constructor, undefined),
 		)();
 	});
 
-	it("should have thrown exception", function () {
+	it("should have thrown exception", () => {
 		function thrower() {
 			throw new Error(42);
 		}
@@ -66,13 +66,13 @@ describe("Function invocation metadata", function () {
 		assert.throws(wrapped, /42/);
 	});
 
-	it("should have result", function () {
+	it("should have result", () => {
 		wrap(() => 42).withPostHook((data) =>
 			assert.deepStrictEqual(data.result, 42),
 		)();
 	});
 
-	it("should have this binding from method call", function () {
+	it("should have this binding from method call", () => {
 		const obj = {};
 		obj.method = wrap(nop).withPreHook((data) =>
 			assert.deepStrictEqual(data.this, obj),
@@ -80,7 +80,7 @@ describe("Function invocation metadata", function () {
 		obj.method();
 	});
 
-	it("should have this binding from Function.bind", function () {
+	it("should have this binding from Function.bind", () => {
 		const obj = {};
 		const wrapped = wrap(nop).withPreHook((data) =>
 			assert.deepStrictEqual(data.this, obj),
@@ -88,14 +88,14 @@ describe("Function invocation metadata", function () {
 		wrapped.bind(obj)();
 	});
 
-	it("should have the same bound function as the custom hook first argument", function () {
+	it("should have the same bound function as the custom hook first argument", () => {
 		const wrapped = wrap(nop).withCustomHook((data, f) =>
 			assert.deepStrictEqual(data.boundFunction, f),
 		);
 		wrapped();
 	});
 
-	it("should have immutable properties (those in the API)", function () {
+	it("should have immutable properties (those in the API)", () => {
 		const wrapped = wrap(nop).withPrePostHooks(
 			(data) => {
 				// pre-hook

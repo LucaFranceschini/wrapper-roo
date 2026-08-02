@@ -1,9 +1,9 @@
-"use strict";
+
 
 // require this file in every test suite
 
 import assert from "node:assert/strict";
-import { beforeEach, describe, it } from "node:test";
+import { describe, it } from "node:test";
 import sinon from "sinon";
 
 import wrap from "../index.js";

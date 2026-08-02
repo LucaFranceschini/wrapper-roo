@@ -1,9 +1,9 @@
-"use strict";
+
 
 import { assert, describe, it, wrap } from "./setup.js";
 
-describe("ES6 generator functions", function () {
-	it("should work with generator functions", function () {
+describe("ES6 generator functions", () => {
+	it("should work with generator functions", () => {
 		// start inclusive, end exclusive
 		function* range(start, end) {
 			while (start < end) yield start++;
@@ -14,7 +14,7 @@ describe("ES6 generator functions", function () {
 		assert.strictEqual(sum, 6);
 	});
 
-	it("should preserve non-constructibility of generators (ES7)", function () {
+	it("should preserve non-constructibility of generators (ES7)", () => {
 		function* gen() {}
 		const WrappedGenerator = wrap.the(gen);
 		assert.throws(() => new WrappedGenerator(), TypeError);

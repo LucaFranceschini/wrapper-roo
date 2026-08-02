@@ -1,4 +1,4 @@
-"use strict";
+
 
 import buildPrePostHook from "./lib/prePostHooks.js";
 import wrapWithHook from "./lib/wrapper.js";
@@ -19,6 +19,6 @@ function wrap(func) {
 }
 
 // just wrap the original function, mostly useful for testing purposes
-wrap.the = (func) => wrapWithHook(func, (data, f) => f());
+wrap.the = (func) => wrapWithHook(func, (_data, f) => f());
 
 function nop() {}

@@ -5,8 +5,8 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"format": "npx @bomejs/biome format --write",
-		"lint": "eslint",
+		"format": "npx @biomejs/biome format --write",
+		"lint": "npx @biomejs/biome lint --write",
 		"test": "node --test",
 		"test-coverage": "node --test --experimental-test-coverage"
 	},

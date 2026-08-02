@@ -1,30 +1,30 @@
-"use strict";
+
 
 import { assert, describe, it, wrap } from "./setup.js";
 
-describe("ES6 classes", function () {
+describe("ES6 classes", () => {
 	class Person {
 		constructor(name) {
 			this.name = name;
 		}
 	}
 
-	it("should work when wrapped function is a class (constructor)", function () {
+	it("should work when wrapped function is a class (constructor)", () => {
 		const WrappedPerson = wrap.the(Person);
 		assert.deepStrictEqual(new Person("alonzo"), new WrappedPerson("alonzo"));
 	});
 
-	it("should throw when wrapped function is a class but new is not used", function () {
+	it("should throw when wrapped function is a class but new is not used", () => {
 		assert.throws(() => Person("haskell"), TypeError);
 
 		const WrappedPerson = wrap.the(Person);
 		assert.throws(() => WrappedPerson("curry"), TypeError);
 	});
 
-	it("should work with class inheritance", function () {
+	it("should work with class inheritance", () => {
 		class FullNamePerson extends Person {
 			constructor(firstName, lastName) {
-				super(firstName + " " + lastName);
+				super(`${firstName} ${lastName}`);
 			}
 		}
 
@@ -36,8 +36,11 @@ describe("ES6 classes", function () {
 		);
 	});
 
-	it("should preserve class static methods", function () {
+	it("should preserve class static methods", () => {
 		class NiceGuy {
+			// add a method to avoid static-only classes warnings
+			someMethod() { }
+			
 			static sayHi() {
 				return "hi";
 			}
