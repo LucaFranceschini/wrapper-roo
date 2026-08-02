@@ -5,7 +5,7 @@
 
 [![npm version](https://badge.fury.io/js/wrapper-roo.svg)](https://badge.fury.io/js/wrapper-roo)
 ![Node.js CI](https://github.com/LucaFranceschini/wrapper-roo/workflows/Node.js%20CI/badge.svg)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 
 ## Installation
 The package can be locally installed from npm:
@@ -106,10 +106,17 @@ To install dependencies:
 $ npm i
 ```
 
-To run linter, tests and get coverage report:
+To run formatter, linter, and other fixes:
 ```
-$ npm test
+$ npm run check
 ```
+
+To run test and get coverage:
+```
+$ npm run test-coverage
+```
+
+See `package.json` for more details.
 
 ## Wiki
 See the [wiki page](https://github.com/LucaFranceschini/wrapper-roo/wiki) for more information.
