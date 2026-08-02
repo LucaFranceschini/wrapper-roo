@@ -1,33 +1,33 @@
 {
-  "name": "wrapper-roo",
-  "version": "0.2.9",
-  "description": "JavaScript transparent function wrapper with reflection capabilities",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "lint": "eslint",
-	"test": "node --test",
-	"test-coverage": "node --test --experimental-test-coverage"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LucaFranceschini/wrapper-roo.git"
-  },
-  "keywords": [
-    "wrapper",
-    "functions",
-    "instrumentation",
-    "monitoring"
-  ],
-  "author": "Luca Franceschini <luca.franceschini92@gmail.com> (https://github.com/LucaFranceschini)",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/LucaFranceschini/wrapper-roo/issues"
-  },
-  "homepage": "https://github.com/LucaFranceschini/wrapper-roo#readme",
-  "devDependencies": {
-    "eslint": "^9.36.0",
-    "neostandard": "^0.13.0",
-    "sinon": "^22.0.0"
-  }
+	"name": "wrapper-roo",
+	"version": "0.2.9",
+	"description": "JavaScript transparent function wrapper with reflection capabilities",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"format": "npx @bomejs/biome format --write",
+		"lint": "eslint",
+		"test": "node --test",
+		"test-coverage": "node --test --experimental-test-coverage"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/LucaFranceschini/wrapper-roo.git"
+	},
+	"keywords": [
+		"wrapper",
+		"functions",
+		"instrumentation",
+		"monitoring"
+	],
+	"author": "Luca Franceschini <luca.franceschini92@gmail.com> (https://github.com/LucaFranceschini)",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/LucaFranceschini/wrapper-roo/issues"
+	},
+	"homepage": "https://github.com/LucaFranceschini/wrapper-roo#readme",
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.6",
+		"sinon": "^22.0.0"
+	}
 }
