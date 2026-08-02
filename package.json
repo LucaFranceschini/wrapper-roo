@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"check": "npx @biomejs/biome check --write",
-		"ci-check": "npx @biomejs/biome ci --write",
+		"ci-check": "npx @biomejs/biome ci",
 		"format": "npx @biomejs/biome format --write",
 		"lint": "npx @biomejs/biome lint --write",
 		"test": "node --test",
