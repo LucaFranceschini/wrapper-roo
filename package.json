@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint",
 	"test": "node --test",
-	"test-coverage": "node --test --experimental-test-coverage",
+	"test-coverage": "node --test --experimental-test-coverage"
   },
   "repository": {
     "type": "git",
