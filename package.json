@@ -25,13 +25,10 @@
   },
   "homepage": "https://github.com/LucaFranceschini/wrapper-roo#readme",
   "devDependencies": {
-    "chai": "^6.2.0",
-    "dirty-chai": "^3.0.0-rc.1",
     "eslint": "^9.36.0",
     "mocha": "^11.0.1",
     "neostandard": "^0.13.0",
-    "sinon": "^22.0.0",
-    "sinon-chai": "^4.0.1"
+    "sinon": "^22.0.0"
   },
   "standard": {
     "env": [

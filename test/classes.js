@@ -1,6 +1,6 @@
 'use strict'
 
-import { wrap } from './setup.js'
+import { assert, wrap } from './setup.js'
 
 describe('ES6 classes', function () {
   class Person {
@@ -11,13 +11,20 @@ describe('ES6 classes', function () {
 
   it('should work when wrapped function is a class (constructor)', function () {
     const WrappedPerson = wrap.the(Person)
-    new Person('alonzo').should.be.deep.equal(new WrappedPerson('alonzo'))
+	assert.deepStrictEqual(new Person('alonzo'), new WrappedPerson('alonzo'))
   })
 
   it('should throw when wrapped function is a class but new is not used', function () {
-    (() => Person('haskell')).should.throw(TypeError)
+	assert.throws(
+		() => Person('haskell'),
+		TypeError
+	)
+	
     const WrappedPerson = wrap.the(Person)
-    ;(() => WrappedPerson('curry')).should.throw(TypeError)
+    assert.throws(
+		() => WrappedPerson('curry'),
+		TypeError
+	)
   })
 
   it('should work with class inheritance', function () {
@@ -26,16 +33,21 @@ describe('ES6 classes', function () {
         super(firstName + ' ' + lastName)
       }
     }
+	
     const WrappedFullNamePerson = wrap.the(FullNamePerson)
-    new WrappedFullNamePerson('ada', 'lovelace').name
-      .should.equal(new Person('ada lovelace').name)
+	
+	assert.deepStrictEqual(
+		new WrappedFullNamePerson('ada', 'lovelace').name,
+		new Person('ada lovelace').name
+	)
   })
 
   it('should preserve class static methods', function () {
     class NiceGuy {
       static sayHi () { return 'hi' }
     }
+	
     const WrappedNiceGuy = wrap.the(NiceGuy)
-    WrappedNiceGuy.sayHi().should.equal(NiceGuy.sayHi())
+	assert.deepStrictEqual(NiceGuy.sayHi(), WrappedNiceGuy.sayHi())
   })
 })

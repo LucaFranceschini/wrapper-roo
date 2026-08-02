@@ -1,6 +1,6 @@
 'use strict'
 
-import { nop, wrap } from './setup.js'
+import { assert, nop, wrap } from './setup.js'
 
 /* The following tests only look at own properties because inherited ones are
  * handled by copying the internal prototype. Also, descriptor flags are set
@@ -10,16 +10,16 @@ describe('Function object properties', function () {
   function unary (_arg) { }
 
   it('should preserve function name', function () {
-    wrap.the(nop).name.should.equal(nop.name)
+	  assert.strictEqual(wrap.the(nop).name, nop.name)
   })
 
   it('should preserve number of expected arguments', function () {
     // wrap a function with a number of arguments > 0 not to involve defaults
-    wrap.the(unary).length.should.equal(unary.length)
+	  assert.strictEqual(wrap.the(nop).length, nop.length)
   })
 
   it('should preserve prototype property', function () {
-    wrap.the(unary).prototype.should.equal(unary.prototype)
+	  assert.deepStrictEqual(wrap.the(nop).prototype, nop.prototype)
   })
 
   it('should copy own property data descriptors', function () {
@@ -31,7 +31,10 @@ describe('Function object properties', function () {
       writable: true
     }
     Object.defineProperty(foo, 'bar', descriptor)
-    wrap.the(foo).should.have.ownPropertyDescriptor('bar', descriptor)
+	assert.deepStrictEqual(
+		Object.getOwnPropertyDescriptor(wrap.the(foo), 'bar'),
+		descriptor
+	)
   })
 
   it('should preserve prototype descriptors list', function () {
@@ -39,14 +42,15 @@ describe('Function object properties', function () {
     if (Object.getOwnPropertyDescriptors) {
       const originalDescriptors = Object.getOwnPropertyDescriptors(nop)
       const wrappedDescriptors = Object.getOwnPropertyDescriptors(wrap.the(nop))
-      wrappedDescriptors.should.deep.equal(originalDescriptors)
+	  assert.deepStrictEqual(originalDescriptors, wrappedDescriptors)
     }
   })
 
   it('should work with getters', function () {
     function idiot () { }
     Object.defineProperty(idiot, 'name', { get: () => 'luca' })
-    wrap.the(idiot).name.should.equal(idiot.name)
+	const wrapped = wrap.the(idiot)
+	assert.strictEqual(wrapped.name, idiot.name)
   })
 
   it('should work with setters', function () {
@@ -57,7 +61,7 @@ describe('Function object properties', function () {
     })
     const wrapped = wrap.the(idiot)
     wrapped.name = 'forrest'
-    ;(wrapped.name).should.equal('forrest')
+	assert.strictEqual(wrapped.name, 'forrest')
   })
 
   it('should preserve Symbol properties of func', function () {
@@ -65,7 +69,7 @@ describe('Function object properties', function () {
     const symbol = Symbol('shh')
     foo[symbol] = 'top secret'
     const wrapped = wrap.the(foo)
-    wrapped[symbol].should.equal(foo[symbol])
+	assert.strictEqual(wrapped[symbol], foo[symbol])
   })
 
   // vanilla functions have 'prototype' property by default
@@ -73,8 +77,8 @@ describe('Function object properties', function () {
   it('should not introduce prototype property', function () {
     const bound = nop.bind(null) // bind 'this' to null, don't care
     const wrapped = wrap.the(bound)
-    bound.should.not.have.own.property('prototype')
-    wrapped.should.not.have.property('prototype') // not even inherited
+	assert.strictEqual(bound.prototype, undefined)
+	assert.strictEqual(wrapped.prototype, undefined) // not even inherited
   })
 
   it('should preserve the internal prototype', function () {
@@ -82,6 +86,9 @@ describe('Function object properties', function () {
     // (otherwise all functions use the same one)
     function foo () { }
     Object.setPrototypeOf(foo, { })
-    wrap.the(foo).should.have.prototype(Object.getPrototypeOf(foo))
+	assert.deepStrictEqual(
+		Object.getPrototypeOf(wrap.the(foo)),
+		Object.getPrototypeOf(foo)
+	)
   })
 })

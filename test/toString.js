@@ -1,31 +1,31 @@
 'use strict'
 
-import { nop, spy, wrap } from './setup.js'
+import { assert, nop, sinon, spy, wrap } from './setup.js'
 
 describe('toString method', function () {
   it('should preserve toString() result', function () {
-    wrap.the(nop).toString().should.equal(nop.toString())
+	  assert.strictEqual(wrap.the(nop).toString(), nop.toString())
   })
 
   it('should called overridden toString() if any', function () {
     function foo () { }
     foo.toString = spy
     wrap.the(foo).toString()
-    spy.should.have.been.calledOnce()
+	sinon.assert.calledOnce(spy)
   })
 
   it('should return original toString() if accessed indirectly', function () {
     function foo () { }
     foo.alias = foo.toString
-    wrap.the(foo).alias.should.equal(Function.prototype.toString)
+	assert.strictEqual(wrap.the(foo).alias, Function.prototype.toString)
   })
 
   it('should always return the same toString()', function () {
-    wrap.the(nop).toString.should.equal(wrap.the(nop).toString)
+	  assert.strictEqual(wrap.the(nop).toString(), wrap.the(nop).toString())
   })
 
   it('should not throw directly calling Function.prototype.toString on wrapped function', function () {
     const wrapped = wrap.the(nop)
-    Function.prototype.toString.call(wrapped)
+	assert.doesNotThrow(() => Function.prototype.toString.call(wrapped))
   })
 })

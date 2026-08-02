@@ -1,6 +1,6 @@
 'use strict'
 
-import { wrap } from './setup.js'
+import { assert, wrap } from './setup.js'
 
 describe('ES6 generator functions', function () {
   it('should work with generator functions', function () {
@@ -11,12 +11,12 @@ describe('ES6 generator functions', function () {
     const wrappedRange = wrap.the(range)
     let sum = 0
     for (const i of wrappedRange(1, 4)) sum += i
-    sum.should.equal(6)
+    assert.strictEqual(sum, 6)
   })
 
   it('should preserve non-constructibility of generators (ES7)', function () {
     function * gen () { }
-    const WrappedGenerator = wrap.the(gen)
-    ;(() => new WrappedGenerator()).should.throw(TypeError)
+    const WrappedGenerator = wrap.the(gen);
+    assert.throws(() => new WrappedGenerator(), TypeError)
   })
 })

@@ -1,29 +1,42 @@
 'use strict'
 
-import { nop, wrap } from './setup.js'
+import { assert, nop, wrap } from './setup.js'
 
 describe('Arguments and result checking', function () {
   it('should throw if object to be wrapped is not a function', function () {
-    (() => wrap.the('shit')).should.throw(TypeError)
+    assert.throws(
+		() => wrap.the('shit'),
+		TypeError
+	)
   })
 
   it('should throw if pre-hook is not a function', function () {
-    (() => wrap(nop).withPreHook('hey')).should.throw(TypeError)
+    assert.throws(
+		() => wrap(nop).withPreHook('hey'),
+		TypeError
+	)
   })
 
   it('should throw if post-hook is not a function', function () {
-    (() => wrap(nop).withPostHook('ho')).should.throw(TypeError)
+    assert.throws(
+		() => wrap(nop).withPostHook('ho'),
+		TypeError
+	)
   })
 
   it('should throw if custom hook is not a function', function () {
-    (() => wrap(nop).withCustomHook("let's go")).should.throw(TypeError)
+    assert.throws(
+		() => wrap(nop).withCustomHook("let's go"),
+		TypeError
+	)
   })
 
   it('should return a function', function () {
-    wrap.the(nop).should.be.a('function')
+	  const wrapped = wrap.the(nop)
+	  assert.strictEqual(typeof wrapped, 'function')
   })
 
   it('should return a different function', function () {
-    wrap.the(nop).should.not.equal(nop)
+	  assert.notStrictEqual(wrap.the(nop), nop)
   })
 })

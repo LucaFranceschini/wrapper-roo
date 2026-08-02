@@ -1,18 +1,18 @@
 'use strict'
 
-import { nop, sinon, spy, wrap } from './setup.js'
+import { assert, nop, sinon, spy, wrap } from './setup.js'
 
 describe('Number and order of invocations', function () {
   it('should invoke pre-hook exactly once', function () {
     const wrapped = wrap(nop).withPreHook(spy)
     wrapped()
-    spy.should.have.been.calledOnce()
+	sinon.assert.calledOnce(spy)
   })
 
   it('should invoke post-hook exactly once', function () {
     const wrapped = wrap(nop).withPostHook(spy)
     wrapped()
-    spy.should.have.been.calledOnce()
+	sinon.assert.calledOnce(spy)
   })
 
   it('should invoke hooks and wrapped function in the right order', function () {
@@ -20,18 +20,18 @@ describe('Number and order of invocations', function () {
     const postSpy = sinon.spy()
     const wrapped = wrap(spy).withPrePostHooks(preSpy, postSpy)
     wrapped()
-    preSpy.should.have.been.calledImmediatelyBefore(spy)
-    postSpy.should.have.been.calledImmediatelyAfter(spy)
+    assert.ok(preSpy.calledImmediatelyBefore(spy))
+    assert.ok(postSpy.calledImmediatelyAfter(spy))
   })
 
   it('should invoke wrapped function exactly once', function () {
     const wrapped = wrap.the(spy)
     wrapped()
-    spy.should.have.been.calledOnce()
+	sinon.assert.calledOnce(spy)
   })
 
   it('should invoke the custom hook', function () {
     wrap(nop).withCustomHook(spy)()
-    spy.should.have.been.calledOnce()
+	sinon.assert.calledOnce(spy)
   })
 })
