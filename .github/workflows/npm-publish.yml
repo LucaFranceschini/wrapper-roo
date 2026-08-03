@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 'lts/*'
       - run: npm ci
-      - run: npm ci-check
+      - run: npm run ci-check
       - run: npm test
 
   publish-npm:
