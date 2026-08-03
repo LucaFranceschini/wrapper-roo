@@ -16,6 +16,10 @@
 		"type": "git",
 		"url": "git+https://github.com/LucaFranceschini/wrapper-roo.git"
 	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
 	"keywords": [
 		"wrapper",
 		"functions",
