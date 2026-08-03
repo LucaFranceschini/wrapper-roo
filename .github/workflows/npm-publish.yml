@@ -33,6 +33,6 @@ jobs:
           node-version: 'lts/*'
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: npm publish
+      - run: npm publish --provenance
         env:
           NPM_CONFIG_PROVENANCE: true
