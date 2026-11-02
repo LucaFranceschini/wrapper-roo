@@ -5,26 +5,26 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [ current, lts/*, lts/-1 ]
+        version: [current, lts/*, lts/-1]
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Setup Node.js version
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.version }}
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm run ci-check
-    - run: npm test
-      env:
-        CI: true
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm run ci-check
+      - run: npm test
+        env:
+          CI: true
