@@ -1,4 +1,5 @@
 # wrapper-roo
+
 **Wrap** any function with custom hooks, executing code before and after the function, controlling arguments, result and so on, while still being as **transparent** as possible to the rest of the code.
 
 ![Logo](https://raw.githubusercontent.com/LucaFranceschini/wrapper-roo/master/ripper-roo.png)
@@ -8,6 +9,7 @@
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 
 ## Installation
+
 The package can be locally installed from npm:
 
     $ npm i wrapper-roo
@@ -15,17 +17,21 @@ The package can be locally installed from npm:
 ## Usage
 
 ### Pre- and post-hooks
-A *hook* is a function to be executed before or after a given one:
-```js
-const wrap = require('wrapper-roo')
 
-function hello (name) { console.log('hello ' + name) }
+A _hook_ is a function to be executed before or after a given one:
+```js
+const wrap = require("wrapper-roo");
+
+function hello(name) {
+	console.log("hello " + name);
+}
 
 const wrapped = wrap(hello).withPrePostHooks(
-  () => console.log('before'), // pre-hook
-  () => console.log('after')) // post-hook
+	() => console.log("before"), // pre-hook
+	() => console.log("after"),
+); // post-hook
 
-wrapped('Crash')
+wrapped("Crash");
 ```
 ```
 before
@@ -35,18 +41,21 @@ after
 Arguments and return value are forwarded, thus the wrapper can be used just like the original function. See the [wiki](https://github.com/LucaFranceschini/wrapper-roo/wiki/Basic-Features-&-Forwarding) for more information.
 
 ### Function Invocation Information
+
 Hooks receive information about the function call as their first argument:
 ```js
-const wrap = require('wrapper-roo')
+const wrap = require("wrapper-roo");
 
-function foo () { /* ... */ }
+function foo() {
+	/* ... */
+}
 
-const wrapped = wrap(foo).withPreHook(data => {
-  console.log('Calling function ' + data.function.name)
-  console.log('Args: ' + data.arguments)
-})
+const wrapped = wrap(foo).withPreHook((data) => {
+	console.log("Calling function " + data.function.name);
+	console.log("Args: " + data.arguments);
+});
 
-wrapped(1, 'hey')
+wrapped(1, "hey");
 ```
 ```
 Calling function foo
@@ -64,16 +73,21 @@ Additional fields are available to post-hooks:
 - `exception`: thrown exception;
 - `success`: whether the execution of the function completed normally or an exception was thrown.
 
-**Note**: invocation data is *read-only*: modifications to properties above are not allowed and will have no effect on the function execution.
+**Note**: invocation data is _read-only_: modifications to properties above are not allowed and will have no effect on the function execution.
 
 ### Custom Hooks
+
 Greater control can be achieved with custom hooks, if needed:
 ```js
-const wrap = require('wrapper-roo')
+const wrap = require("wrapper-roo");
 
-function foo () { /* ... */ }
+function foo() {
+	/* ... */
+}
 
-wrap(foo).withCustomHook((data, f) => { /* ... f() ... */ })
+wrap(foo).withCustomHook((data, f) => {
+	/* ... f() ... */
+});
 ```
 Custom hooks conveniently receive as a second argument the wrapped function already bound to `this` and arguments, and already set up as a constructor call if needed.
 Just call `f()`.
@@ -81,24 +95,27 @@ Just call `f()`.
 Note that no automatic handling of binding, arguments, exceptions etc is performed when directly invoking the original function as `data.function()`.
 
 ### (Fluent) API
+
 The following functions are exposed:
 ```js
-const wrap = require('wrapper-roo')
+const wrap = require("wrapper-roo");
 
-wrap(func).withPreHook(preHook)
-wrap(func).withPostHook(postHook)
-wrap(func).withPrePostHooks(preHook, postHook)
-wrap(func).withCustomHook(hook)
-wrap.the(func)  // just wrap it
+wrap(func).withPreHook(preHook);
+wrap(func).withPostHook(postHook);
+wrap(func).withPrePostHooks(preHook, postHook);
+wrap(func).withCustomHook(hook);
+wrap.the(func); // just wrap it
 ```
 
 ### Caveats
-*Of course*, identity is not preserved: `wrap.the(func) !== func`.
+
+_Of course_, identity is not preserved: `wrap.the(func) !== func`.
 
 The current implementation is based on the Proxy API.
 Caveats of this approach (corner cases) are listed [here](https://github.com/LucaFranceschini/wrapper-roo/issues?q=is%3Aopen+is%3Aissue+label%3Aproxies).
 
 ## Contributing
+
 Install Node.js and npm, clone the repo and `cd` into it.
 
 To install dependencies:
@@ -119,4 +136,5 @@ $ npm run test-coverage
 See `package.json` for more details.
 
 ## Wiki
+
 See the [wiki page](https://github.com/LucaFranceschini/wrapper-roo/wiki) for more information.
